@@ -231,7 +231,7 @@ export const AdminQueuePage = ({
                       {pub.status === 'Pending' ? '-' : new Date(pub.lastUpdated).toLocaleDateString()}
                     </td>
                     <td className="p-4 text-center">
-                      <div className="flex items-center justify-center space-x-2">
+                      <div className="flex items-center justify-center">
                         {(!currentUser.isTemporaryAdmin || currentUser.granularPermissions?.features?.includes('evaluate_manuscript')) && (
                           <button
                             onClick={() => {
@@ -241,16 +241,6 @@ export const AdminQueuePage = ({
                           >
                             <Eye className="h-3.5 w-3.5" />
                             <span>Evaluate</span>
-                          </button>
-                        )}
-                        {(!currentUser.isTemporaryAdmin || currentUser.granularPermissions?.features?.includes('delete_manuscript')) && (
-                          <button
-                            onClick={() => {
-                              alert("Delete Manuscript clicked! (Functionality to be wired)");
-                            }}
-                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold flex items-center justify-center space-x-1 cursor-pointer transition-all active:scale-95 mx-auto"
-                          >
-                            <span>Delete</span>
                           </button>
                         )}
                       </div>
