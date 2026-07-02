@@ -197,12 +197,9 @@ export function GrantAssessorModal({
             </div>
           )}
 
-          <div className={`transition-opacity duration-300 ${showConstraintPrompt ? 'opacity-30 pointer-events-none' : 'opacity-100'} space-y-4`}>
+          <div className={`transition-opacity duration-300 ${showConstraintPrompt ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
             
-            <div className="text-sm text-slate-500 flex flex-col gap-1">
-              <p>Target: <span className="font-bold text-slate-700">{facultyUser.name}</span> ({facultyUser.department})</p>
-              <p>Select the specific pages and features you want to grant to this faculty member. Checking a feature will enforce required page access.</p>
-            </div>
+            <p className="text-sm text-slate-500 mb-4">Select the pages and features to grant to <span className="font-bold">{facultyUser.name}</span>:</p>
 
             <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-visible p-4 space-y-4 text-left">
               {/* Pages Section */}
