@@ -32,7 +32,7 @@ export default function SignIn() {
     setError('');
     setIsLoading(true);
     await new Promise(r => setTimeout(r, 500)); // micro-delay for feel
-    const res = login(email, password);
+    const res = await login(email, password);
     setIsLoading(false);
     if (res.success) {
       if (res.user.role === 'Admin') navigate('/admin/dashboard');

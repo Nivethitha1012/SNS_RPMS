@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Eye } from 'lucide-react';
+import { Search, Eye, Shield, BookOpen, Lock } from 'lucide-react';
 import { AdminReviews } from '../../components/evaluation/EvaluationPanel';
 import { TempAdminDashboard } from '../../components/dashboard/ActivityFeed';
 
@@ -25,7 +25,14 @@ export const TempAdminPage = ({
   const tempAdminSearchContainerRef = useRef(null);
   const tempAdminSearchInputRef = useRef(null);
 
-  // Collapse search bar on click outside
+  // ── Derived permissions from granularPermissions ───────────────────────────
+  const grantedPages = currentUser.granularPermissions?.pages || [];
+  const grantedFeatures = currentUser.granularPermissions?.features || [];
+
+  const canEvaluate = grantedFeatures.includes('evaluate_manuscript');
+  const canViewQueue = grantedPages.includes('queue') || grantedPages.includes('evaluation');
+
+  // ── Collapse search bar on click outside ──────────────────────────────────
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (
@@ -53,24 +60,19 @@ export const TempAdminPage = ({
     setADepartmentFilter('All');
   };
 
-  const uniqueDepartments = Array.from(new Set(publications.map(p => p.department)));
+  // ── Filter publications visible to this assessor ───────────────────────────
+  // Show all publications EXCEPT the assessor's own (they cannot self-evaluate)
+  const baseTempAdminPubs = publications.filter(p => p.authorId !== currentUser.id);
 
-  // Filter publications based on current Temp Admin access restrictions
-  const baseTempAdminPubs = publications.filter(p => {
-    if (currentUser.tempAdminAccessType === 'full') {
-      return p.authorId !== currentUser.id;
-    }
-    return p.assignedReviewerId === currentUser.id;
-  });
+  const uniqueDepartments = Array.from(new Set(baseTempAdminPubs.map(p => p.department)));
 
   const tempAdminPubs = baseTempAdminPubs.filter(p => {
-    const matchesSearch = p.title.toLowerCase().includes(aSearchText.toLowerCase()) ||
+    const matchesSearch =
+      p.title.toLowerCase().includes(aSearchText.toLowerCase()) ||
       p.author.toLowerCase().includes(aSearchText.toLowerCase()) ||
       p.id.toLowerCase().includes(aSearchText.toLowerCase());
-
     const matchesStatus = aStatusFilter === 'All' || p.status === aStatusFilter;
     const matchesDept = aDepartmentFilter === 'All' || p.department === aDepartmentFilter;
-
     return matchesSearch && matchesStatus && matchesDept;
   });
 
@@ -80,8 +82,9 @@ export const TempAdminPage = ({
     approved: tempAdminPubs.filter(p => p.status === 'Approved').length,
   };
 
+  // ── If a publication is selected for review ────────────────────────────────
   if (selectedPubIdForReview !== null) {
-    if (currentUser.tempAdminAccessType === 'full') {
+    if (canEvaluate) {
       return (
         <div className="space-y-6 w-full">
           <AdminReviews
@@ -109,8 +112,49 @@ export const TempAdminPage = ({
     }
   }
 
+  // ── No evaluation page access ──────────────────────────────────────────────
+  if (!canViewQueue) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4 text-center">
+        <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200">
+          <Lock className="h-10 w-10 text-amber-500 mx-auto" />
+        </div>
+        <div>
+          <h3 className="font-black text-slate-800 text-lg">No Access Granted</h3>
+          <p className="text-sm text-slate-500 mt-1 max-w-sm">
+            You have not been granted access to the Evaluation Console.
+            Contact your admin to request specific permissions.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 w-full text-left">
+
+      {/* Access Summary Banner */}
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+            <Shield className="h-4 w-4 text-emerald-600" />
+            <span>Assessor Access Active</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {grantedPages.map(page => (
+              <span key={page} className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold rounded-full uppercase tracking-wide">
+                {page.replace('_', ' ')}
+              </span>
+            ))}
+            {grantedFeatures.map(feature => (
+              <span key={feature} className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-full uppercase tracking-wide">
+                {feature.replace('_', ' ')}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Stats scorecard banner */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow flex flex-col justify-between text-left transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-slate-300">
@@ -211,17 +255,22 @@ export const TempAdminPage = ({
                   <div>
                     <p>Submitted: {new Date(pub.submissionDate).toLocaleDateString()}</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  {canEvaluate ? (
                     <button onClick={() => setSelectedPubIdForReview(pub.id)} className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-sm font-sans flex items-center space-x-1 cursor-pointer transition-all active:scale-95">
                       <Eye className="h-3 w-3" />
                       <span>Evaluate</span>
                     </button>
-                  </div>
+                  ) : (
+                    <span className="px-3.5 py-1.5 bg-slate-100 text-slate-400 text-xs font-bold rounded-lg flex items-center space-x-1">
+                      <BookOpen className="h-3 w-3" />
+                      <span>View Only</span>
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
             {tempAdminPubs.length === 0 && (
-              <div className="p-8 text-center text-slate-455 italic">No publications index records matching active search filters.</div>
+              <div className="p-8 text-center text-slate-455 italic">No publications matching active search filters.</div>
             )}
           </div>
 
@@ -257,16 +306,23 @@ export const TempAdminPage = ({
                       </span>
                     </td>
                     <td className="p-4 text-center">
-                      <button onClick={() => setSelectedPubIdForReview(pub.id)} className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-bold flex items-center justify-center space-x-1 cursor-pointer transition-all active:scale-95 mx-auto">
-                        <Eye className="h-3.5 w-3.5" />
-                        <span>Evaluate</span>
-                      </button>
+                      {canEvaluate ? (
+                        <button onClick={() => setSelectedPubIdForReview(pub.id)} className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-bold flex items-center justify-center space-x-1 cursor-pointer transition-all active:scale-95 mx-auto">
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Evaluate</span>
+                        </button>
+                      ) : (
+                        <span className="px-3 py-1.5 bg-slate-100 text-slate-400 rounded text-xs font-bold flex items-center justify-center space-x-1 mx-auto">
+                          <BookOpen className="h-3.5 w-3.5" />
+                          <span>View Only</span>
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}
                 {tempAdminPubs.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="p-10 text-center text-slate-400 italic">No publications index records matching active search filters.</td>
+                    <td colSpan={9} className="p-10 text-center text-slate-400 italic">No publications matching active search filters.</td>
                   </tr>
                 )}
               </tbody>

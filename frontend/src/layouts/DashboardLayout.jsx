@@ -51,8 +51,8 @@ export default function DashboardLayout() {
 
   const activeUnreadNotifsCount = unreadCount;
 
-  const handleSignOut = () => {
-    logout();
+  const handleSignOut = async () => {
+    await logout();
     setLogoutConfirmOpen(false);
     navigate('/login');
   };
@@ -133,7 +133,14 @@ export default function DashboardLayout() {
               <>
                 {renderSidebarButton('/faculty/upload', 'Upload Manuscript', Upload)}
                 {renderSidebarButton('/faculty/publications', 'My Publications', BookOpen)}
-                {currentUser.isTemporaryAdmin && renderSidebarButton('/faculty/evaluation', 'Evaluation Console', ShieldCheck)}
+                {currentUser.isTemporaryAdmin && (
+                  <>
+                    {/* Evaluation Console — shown if granted evaluation page or evaluate_manuscript feature */}
+                    {(currentUser.granularPermissions?.pages?.includes('evaluation') ||
+                      currentUser.granularPermissions?.features?.includes('evaluate_manuscript')) &&
+                      renderSidebarButton('/faculty/evaluation', 'Evaluation Console', ShieldCheck)}
+                  </>
+                )}
               </>
             ) : (
               <>
