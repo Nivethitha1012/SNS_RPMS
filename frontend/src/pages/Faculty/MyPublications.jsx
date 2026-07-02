@@ -127,6 +127,7 @@ export const PublicationsPage = ({
                 <table className="w-full border-collapse text-xs text-left">
                   <thead>
                     <tr className="bg-slate-50 text-slate-400 uppercase tracking-widest font-extrabold text-[9px] border-b border-slate-200">
+                      <th className="p-4 text-center">S.No</th>
                       <th className="p-4 text-center">
                         <div className="flex flex-col items-center">
                           <span>Publication</span>
@@ -140,7 +141,6 @@ export const PublicationsPage = ({
                           <span>Date</span>
                         </div>
                       </th>
-                      <th className="p-4 text-center">Version</th>
                       <th className="p-4 text-center">Status</th>
                       <th className="p-4 text-center">
                         <div className="flex flex-col items-center">
@@ -152,19 +152,15 @@ export const PublicationsPage = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-150 text-slate-650">
-                    {filteredFacultyPubs.map(pub => (
+                    {filteredFacultyPubs.map((pub, index) => (
                       <tr key={pub.id} className="hover:bg-slate-50/50 transition-colors font-sans py-3">
+                        <td className="p-4 text-slate-400 text-center">{index + 1}</td>
                         <td className="p-4 font-mono font-bold text-slate-400 text-center">{pub.id}</td>
                         <td className="p-4 max-w-sm text-left">
                           <span className="font-bold text-slate-900 block leading-snug">{pub.title}</span>
                         </td>
                         <td className="p-4 text-slate-400 text-center font-medium">
                           {new Date(pub.submissionDate).toLocaleDateString()}
-                        </td>
-                        <td className="p-4 text-center">
-                          <span className="px-1.5 py-0.5 bg-slate-100 border text-slate-700 font-bold rounded text-[10px] font-mono" title={`Version ${pub.currentVersion}`}>
-                            V{pub.currentVersion}
-                          </span>
                         </td>
                         <td className="p-4 text-center">
                           <span className={`px-2 py-0.5 text-[9px] uppercase font-mono font-extrabold rounded-full ${pub.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :

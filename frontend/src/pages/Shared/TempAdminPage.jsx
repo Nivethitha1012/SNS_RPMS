@@ -212,7 +212,6 @@ export const TempAdminPage = ({
                     <p>Submitted: {new Date(pub.submissionDate).toLocaleDateString()}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="px-1.5 py-0.5 bg-slate-100 border text-slate-700 font-bold rounded text-[10px] font-mono" title={`Version ${pub.currentVersion}`}>V{pub.currentVersion}</span>
                     <button onClick={() => setSelectedPubIdForReview(pub.id)} className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-sm font-sans flex items-center space-x-1 cursor-pointer transition-all active:scale-95">
                       <Eye className="h-3 w-3" />
                       <span>Evaluate</span>
@@ -231,6 +230,7 @@ export const TempAdminPage = ({
             <table className="w-full border-collapse text-xs text-left">
               <thead>
                 <tr className="bg-slate-50 text-slate-400 uppercase tracking-widest font-extrabold text-[9px] border-b border-slate-200">
+                  <th className="p-4 text-center">S.No</th>
                   <th className="p-4 text-center"><div className="flex flex-col items-center"><span>Publication</span><span>ID</span></div></th>
                   <th className="p-4">Faculty</th>
                   <th className="p-4">Department</th>
@@ -238,13 +238,13 @@ export const TempAdminPage = ({
                   <th className="p-4 text-center"><div className="flex flex-col items-center"><span>Uploaded</span><span>Date</span></div></th>
                   <th className="p-4 text-center"><div className="flex flex-col items-center"><span>Reviewed</span><span>Date</span></div></th>
                   <th className="p-4 text-center">Status</th>
-                  <th className="p-4 text-center">Version</th>
                   <th className="p-4 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-655">
-                {tempAdminPubs.map((pub) => (
+                {tempAdminPubs.map((pub, index) => (
                   <tr key={pub.id} className="hover:bg-slate-50/40 transition-colors py-2 font-medium">
+                    <td className="p-4 text-slate-400 text-center">{index + 1}</td>
                     <td className="p-4 font-mono font-bold text-slate-400 text-center">{pub.id}</td>
                     <td className="p-4 font-bold text-slate-900">{pub.author}</td>
                     <td className="p-4 font-sans text-slate-505">{pub.department}</td>
@@ -255,9 +255,6 @@ export const TempAdminPage = ({
                       <span className={`px-2 py-0.5 text-[9px] uppercase font-mono font-black rounded-full ${pub.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : pub.status === 'Pending' ? 'bg-amber-100 text-amber-800 animate-pulse' : 'bg-red-100 text-red-800'}`}>
                         {pub.status === 'Closed – Maximum Revision Limit Reached' ? 'Rejected' : pub.status}
                       </span>
-                    </td>
-                    <td className="p-4 text-center">
-                      <span className="px-1.5 py-0.5 bg-slate-100 border text-slate-700 font-bold rounded text-[10px] font-mono inline-block" title={`Version ${pub.currentVersion}`}>V{pub.currentVersion}</span>
                     </td>
                     <td className="p-4 text-center">
                       <button onClick={() => setSelectedPubIdForReview(pub.id)} className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-bold flex items-center justify-center space-x-1 cursor-pointer transition-all active:scale-95 mx-auto">
