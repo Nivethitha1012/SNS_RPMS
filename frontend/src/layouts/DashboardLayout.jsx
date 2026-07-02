@@ -144,7 +144,6 @@ export default function DashboardLayout() {
                 {renderSidebarButton('/admin/upload', 'Upload Manuscript', Upload)}
                 {renderSidebarButton('/admin/publications', 'My Publications', BookOpen)}
                 {renderSidebarButton('/admin/delegation', 'Temporary Access', ShieldCheck)}
-                {renderSidebarButton('/admin/statistics', 'Institution Stats', LineChart)}
               </>
             )}
           </nav>

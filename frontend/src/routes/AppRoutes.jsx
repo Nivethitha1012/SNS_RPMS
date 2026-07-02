@@ -16,7 +16,6 @@ import PageWrapper from '../components/common/PageWrapper';
 import AdminDashboardPage from '../pages/Admin/Dashboard';
 import { AdminQueuePage } from '../pages/Admin/SubmissionsQueue';
 import { AdminEvaluationPage } from '../pages/Admin/EvaluationConsole';
-import { AdminStatsPage } from '../pages/Admin/InstitutionStatistics';
 import { AdminDelegationPage } from '../pages/Admin/DelegateReview';
 
 // Faculty Pages
@@ -39,7 +38,6 @@ export default function AppRoutes() {
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/queue" element={<PageWrapper Component={AdminQueuePage} />} />
           <Route path="/admin/evaluation" element={<PageWrapper Component={AdminEvaluationPage} />} />
-          <Route path="/admin/statistics" element={<PageWrapper Component={AdminStatsPage} />} />
           <Route path="/admin/delegation" element={<PageWrapper Component={AdminDelegationPage} />} />
           <Route path="/admin/upload" element={<PageWrapper Component={UploadPage} />} />
           <Route path="/admin/publications" element={<PageWrapper Component={PublicationsPage} />} />
