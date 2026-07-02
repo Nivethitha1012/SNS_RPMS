@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 
 import { SessionModal, LogoutConfirmationModal } from '../components/auth/index';
-import { GrantAssessorModal } from '../components/assignAccess/AssignAccessModal';
 import { ThemeToggle } from '../components/common/ThemeToggle';
 import snsLogo from '../assets/logos/sns-logo.png';
 
@@ -41,9 +40,6 @@ export default function DashboardLayout() {
   const [sessionExpiryOpen, setSessionExpiryOpen] = useState(false);
   const [sessionTimeLeft, setSessionTimeLeft] = useState(15);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
-  const [grantModalOpen, setGrantModalOpen] = useState(false);
-  const [grantingTargetUserId, setGrantingTargetUserId] = useState(null);
-  const [grantModalType, setGrantModalType] = useState('granted');
 
   useEffect(() => {
     const handleResize = () => setIsSidebarCollapsed(window.innerWidth < 1024);
@@ -114,7 +110,6 @@ export default function DashboardLayout() {
     <div className="flex-1 flex flex-col lg:flex-row relative h-screen w-full overflow-hidden bg-white">
       <SessionModal isOpen={sessionExpiryOpen} onClose={() => {}} onLogout={handleSignOut} timeLeft={sessionTimeLeft} />
       <LogoutConfirmationModal isOpen={logoutConfirmOpen} onClose={() => setLogoutConfirmOpen(false)} onConfirm={handleSignOut} />
-      <GrantAssessorModal isOpen={grantModalOpen} onClose={() => setGrantModalOpen(false)} facultyUser={grantingTargetUserId ? users[grantingTargetUserId] : null} type={grantModalType} />
 
       {!isSidebarCollapsed && (
         <div className="fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-30 lg:hidden animate-fade-in" onClick={() => setIsSidebarCollapsed(true)} />

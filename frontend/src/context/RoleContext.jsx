@@ -11,7 +11,7 @@ const RoleContext = createContext();
 export const RoleProvider = ({ children }) => {
   const { users, setUsers, currentUser, setCurrentUser } = useAuth();
 
-  const grantTemporaryAdmin = (userId, accessType) => {
+  const grantTemporaryAdmin = (userId, permissions) => {
     const targetUser = users[userId];
     if (!targetUser) return;
 
@@ -21,7 +21,7 @@ export const RoleProvider = ({ children }) => {
       const updatedUser = {
         ...u,
         isTemporaryAdmin: true,
-        tempAdminAccessType: accessType,
+        granularPermissions: permissions,
         isAccessRevoked: false,
         grantCount: (u.grantCount || 0) + 1,
       };
@@ -42,7 +42,7 @@ export const RoleProvider = ({ children }) => {
       const updatedUser = {
         ...u,
         isTemporaryAdmin: false,
-        tempAdminAccessType: undefined,
+        granularPermissions: null,
         isAccessRevoked: true,
       };
       if (currentUser && currentUser.id === userId) {

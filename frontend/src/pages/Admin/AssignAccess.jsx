@@ -3,26 +3,61 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { ShieldCheck, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldCheck, X, Search } from 'lucide-react';
+import { GrantAssessorModal } from '../../components/assignAccess/AssignAccessModal';
 
 export const AssignAccessPage = ({
   currentUser,
   users,
   grantTemporaryAdmin,
   revokeTemporaryAdmin,
-  setGrantingTargetUserId,
-  setGrantModalType,
-  setGrantModalOpen,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const [grantModalOpen, setGrantModalOpen] = useState(false);
+  const [grantingTargetUserId, setGrantingTargetUserId] = useState(null);
+  const [grantModalType, setGrantModalType] = useState('granted');
+
+  const handleConfirmGrant = (userId, permissions) => {
+    grantTemporaryAdmin(userId, permissions);
+  };
+
+  const filteredUsers = Object.values(users).filter(u => {
+    if (u.role !== 'Faculty') return false;
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return u.name.toLowerCase().includes(q) || u.department.toLowerCase().includes(q);
+  });
+
   return (
     <div className="space-y-6 text-left w-full">
+      <GrantAssessorModal 
+        isOpen={grantModalOpen} 
+        onClose={() => setGrantModalOpen(false)} 
+        facultyUser={grantingTargetUserId ? users[grantingTargetUserId] : null} 
+        type={grantModalType} 
+        onConfirmGrant={handleConfirmGrant}
+      />
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+        
+        {/* Search Bar */}
+        <div className="mb-6 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-slate-400" />
+          </div>
+          <input
+            type="text"
+            className="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-charcoal focus:border-charcoal sm:text-sm transition-colors"
+            placeholder="Search faculty by name or department..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         {/* Mobile/Tablet Card list */}
         <div className="lg:hidden space-y-4">
-          {Object.values(users)
-            .filter(u => u.role === 'Faculty')
-            .map((user) => {
+          {filteredUsers.map((user) => {
               return (
                 <div key={user.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-left transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-slate-300">
                   <div>
@@ -46,7 +81,6 @@ export const AssignAccessPage = ({
                           setGrantModalType('revoked');
                           setGrantModalOpen(true);
                         } else {
-                          grantTemporaryAdmin(user.id, 'full');
                           setGrantingTargetUserId(user.id);
                           setGrantModalType('granted');
                           setGrantModalOpen(true);
@@ -87,9 +121,7 @@ export const AssignAccessPage = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {Object.values(users)
-                .filter(u => u.role === 'Faculty')
-                .map((user) => {
+              {filteredUsers.map((user) => {
                   return (
                     <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="p-4 font-bold text-slate-800">
@@ -112,7 +144,6 @@ export const AssignAccessPage = ({
                               setGrantModalType('revoked');
                               setGrantModalOpen(true);
                             } else {
-                              grantTemporaryAdmin(user.id, 'full');
                               setGrantingTargetUserId(user.id);
                               setGrantModalType('granted');
                               setGrantModalOpen(true);
