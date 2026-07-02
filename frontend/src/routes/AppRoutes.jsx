@@ -17,8 +17,6 @@ import AdminDashboardPage from '../pages/Admin/Dashboard';
 import { AdminQueuePage } from '../pages/Admin/SubmissionsQueue';
 import { AdminEvaluationPage } from '../pages/Admin/EvaluationConsole';
 import { AssignAccessPage } from '../pages/Admin/AssignAccess';
-import { AdminStatsPage } from '../pages/Admin/InstitutionStatistics';
-import { AdminDelegationPage } from '../pages/Admin/DelegateReview';
 import { AdminFacultyProfilesPage } from '../pages/Admin/FacultyProfiles';
 
 // Faculty Pages
