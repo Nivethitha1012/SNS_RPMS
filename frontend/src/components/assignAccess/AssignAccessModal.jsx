@@ -183,19 +183,19 @@ export function GrantAssessorModal({
         <div className="p-6 space-y-6 overflow-y-auto flex-1 relative">
           
           {showConstraintPrompt && (
-            <div className="absolute top-4 left-6 right-6 bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-lg z-10 animate-fade-in text-left">
+            <div className="absolute top-4 left-6 right-6 bg-white border-2 border-charcoal p-4 rounded-xl shadow-2xl z-10 animate-fade-in text-left">
               <div className="flex space-x-3">
-                <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                <AlertCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-bold text-amber-900">Page Access Required</h4>
-                  <p className="text-xs text-amber-800 mt-1">
-                    The <strong className="font-bold">{showConstraintPrompt.feature.label}</strong> feature requires access to the <strong className="font-bold">{showConstraintPrompt.requiredPage.label}</strong> page. Do you want to automatically check this page and proceed?
+                  <h4 className="text-sm font-black text-charcoal tracking-wide uppercase">Page Access Required</h4>
+                  <p className="text-xs text-slate-600 mt-1">
+                    The <strong className="font-bold text-slate-800">{showConstraintPrompt.feature.label}</strong> feature requires access to the <strong className="font-bold text-slate-800">{showConstraintPrompt.requiredPage.label}</strong> page. Do you want to automatically check this page and proceed?
                   </p>
-                  <div className="mt-3 flex space-x-3">
-                    <button onClick={confirmConstraint} className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer">
+                  <div className="mt-4 flex space-x-3">
+                    <button onClick={confirmConstraint} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-sm">
                       Yes, grant both
                     </button>
-                    <button onClick={cancelConstraint} className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition-colors cursor-pointer">
+                    <button onClick={cancelConstraint} className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-sm">
                       Cancel
                     </button>
                   </div>

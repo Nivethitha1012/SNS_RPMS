@@ -89,13 +89,15 @@ export default function DashboardPage() {
               className="w-48 sm:w-64"
             />
 
-            <button
-              onClick={() => setIsExportOpen(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white h-10 px-4 rounded-xl border border-emerald-700 flex items-center space-x-2 shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer shrink-0 text-xs font-bold"
-            >
-              <Download className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">Export Data</span>
-            </button>
+            {(!currentUser.isTemporaryAdmin || currentUser.granularPermissions?.features?.includes('export_data')) && (
+              <button
+                onClick={() => setIsExportOpen(true)}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white h-10 px-4 rounded-xl border border-emerald-700 flex items-center space-x-2 shadow-sm transition-all duration-300 hover:scale-105 cursor-pointer shrink-0 text-xs font-bold"
+              >
+                <Download className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Export Data</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
