@@ -39,7 +39,6 @@ export function GrantAssessorModal({
 }) {
   const [selectedPages, setSelectedPages] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
-  const [showConstraintPrompt, setShowConstraintPrompt] = useState(null); // { feature, requiredPage }
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
@@ -47,7 +46,6 @@ export function GrantAssessorModal({
       setIsSuccess(type === 'revoked'); // If revoking, we just show success immediately for now.
       setSelectedPages([]);
       setSelectedFeatures([]);
-      setShowConstraintPrompt(null);
     }
   }, [isOpen, type]);
 
@@ -70,32 +68,13 @@ export function GrantAssessorModal({
   // Handle toggling a feature
   const handleToggleFeature = (feature) => {
     if (selectedFeatures.includes(feature.id)) {
-      // Unchecking feature is fine
       setSelectedFeatures(prev => prev.filter(f => f !== feature.id));
     } else {
-      // Checking a feature: does it have a required page that is NOT selected?
       if (!selectedPages.includes(feature.requiredPage)) {
-        setShowConstraintPrompt({
-          feature,
-          requiredPage: PAGES.find(p => p.id === feature.requiredPage)
-        });
-      } else {
-        setSelectedFeatures(prev => [...prev, feature.id]);
+        setSelectedPages(prev => [...prev, feature.requiredPage]);
       }
+      setSelectedFeatures(prev => [...prev, feature.id]);
     }
-  };
-
-  // Confirming the constraint prompt
-  const confirmConstraint = () => {
-    if (showConstraintPrompt) {
-      setSelectedPages(prev => [...prev, showConstraintPrompt.requiredPage.id]);
-      setSelectedFeatures(prev => [...prev, showConstraintPrompt.feature.id]);
-      setShowConstraintPrompt(null);
-    }
-  };
-
-  const cancelConstraint = () => {
-    setShowConstraintPrompt(null);
   };
 
   const handleConfirmGrants = () => {
@@ -175,29 +154,7 @@ export function GrantAssessorModal({
         {/* Scrollable Content */}
         <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar">
           
-          {showConstraintPrompt && (
-            <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-lg animate-fade-in text-left mb-4">
-              <div className="flex space-x-3">
-                <AlertCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-slate-800 tracking-wide">Page Access Required</h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    The <strong className="font-bold text-slate-700">{showConstraintPrompt.feature.label}</strong> feature requires access to the <strong className="font-bold text-slate-700">{showConstraintPrompt.requiredPage.label}</strong> page. Do you want to automatically check this page and proceed?
-                  </p>
-                  <div className="mt-4 flex space-x-3">
-                    <button onClick={confirmConstraint} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer shadow-sm">
-                      Yes, grant both
-                    </button>
-                    <button onClick={cancelConstraint} className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-300 text-xs font-semibold rounded-lg transition-colors cursor-pointer shadow-sm">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className={`transition-opacity duration-300 ${showConstraintPrompt ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+          <div>
             
             <p className="text-sm text-slate-500 mb-4">Select the pages and features to grant to <span className="font-bold">{facultyUser.name}</span>:</p>
 
@@ -231,21 +188,16 @@ export function GrantAssessorModal({
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5">
                   {FEATURES.map(feature => (
-                    <label key={feature.id} className="flex items-start gap-2.5 cursor-pointer group">
+                    <label key={feature.id} className="flex items-center gap-2.5 cursor-pointer group">
                       <input 
                         type="checkbox" 
-                        className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600 shrink-0 mt-0.5"
+                        className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600 shrink-0"
                         checked={selectedFeatures.includes(feature.id)}
                         onChange={() => handleToggleFeature(feature)}
                       />
-                      <div className="flex flex-col text-left">
-                        <span className="text-sm text-slate-700 group-hover:text-slate-900 leading-tight">
-                          {feature.label}
-                        </span>
-                        <span className="text-[10px] text-slate-400 mt-0.5">
-                          Requires: {PAGES.find(p => p.id === feature.requiredPage)?.label}
-                        </span>
-                      </div>
+                      <span className="text-sm text-slate-700 group-hover:text-slate-900 leading-tight">
+                        {feature.label}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -266,7 +218,7 @@ export function GrantAssessorModal({
           <button 
             type="button" 
             onClick={handleConfirmGrants}
-            disabled={!!showConstraintPrompt || (selectedPages.length === 0 && selectedFeatures.length === 0)}
+            disabled={selectedPages.length === 0 && selectedFeatures.length === 0}
             className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 rounded-lg shadow-sm hover:bg-emerald-700 flex items-center space-x-2 transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Check className="h-4 w-4" />
