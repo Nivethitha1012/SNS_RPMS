@@ -32,7 +32,7 @@ export function Spinner({ size = 'md', label = 'Loading...', fullPage = false })
 
   if (fullPage) {
     return (
-      <div className="w-full h-full min-h-[200px] flex items-center justify-center">
+      <div className="w-full h-full min-h-50 flex items-center justify-center">
         {spinner}
       </div>
     );
