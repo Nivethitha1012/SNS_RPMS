@@ -56,11 +56,7 @@ export const NotificationPanel = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-2.5 rounded-xl transition-all duration-300 relative border flex items-center justify-center cursor-pointer ${
-          isDark
-            ? 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
-            : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-        }`}
+        className="p-2.5 rounded-xl transition-all duration-300 relative border flex items-center justify-center cursor-pointer bg-frost-gray border-platinum-silver text-steel-gray hover:bg-mist-silver/60 hover:text-charcoal"
       >
         <Bell className={`h-5 w-5 ${unreadCount > 0 ? 'animate-bell-ring' : ''}`} />
         <AnimatePresence>
@@ -85,20 +81,16 @@ export const NotificationPanel = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`absolute right-0 mt-3 w-80 sm:w-96 border rounded-2xl shadow-xl overflow-hidden z-50 origin-top-right ${
-              isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
-            }`}
+            className="absolute right-0 mt-3 w-80 sm:w-96 border rounded-2xl shadow-xl overflow-hidden z-50 origin-top-right bg-pure-white border-platinum-silver"
           >
             {/* Header */}
-            <div className={`px-5 py-4 border-b flex justify-between items-center ${isDark ? 'border-slate-700' : 'border-slate-100'}`}>
-              <h3 className={`font-bold text-sm ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Notifications</h3>
+            <div className="px-5 py-4 border-b border-platinum-silver flex justify-between items-center">
+              <h3 className="font-bold text-sm text-charcoal">Notifications</h3>
               <div className="flex gap-2">
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                      isDark ? 'text-blue-400 bg-blue-500/10 hover:bg-blue-500/20' : 'text-blue-600 bg-blue-50 hover:bg-blue-100'
-                    }`}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Mark all read
@@ -107,9 +99,7 @@ export const NotificationPanel = () => {
                 {notifications.length > 0 && (
                   <button
                     onClick={clearAll}
-                    className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                      isDark ? 'text-red-400 bg-red-500/10 hover:bg-red-500/20' : 'text-red-600 bg-red-50 hover:bg-red-100'
-                    }`}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-red-600 bg-red-50 hover:bg-red-100"
                     title="Clear all"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -117,7 +107,7 @@ export const NotificationPanel = () => {
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className={`p-1.5 rounded-lg transition-colors sm:hidden ${isDark ? 'text-slate-400 hover:text-slate-300 hover:bg-slate-700' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'}`}
+                  className="p-1.5 rounded-lg transition-colors sm:hidden text-steel-gray hover:text-charcoal hover:bg-mist-silver/50"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -136,23 +126,21 @@ export const NotificationPanel = () => {
                       exit={{ opacity: 0, scale: 0.95 }}
                       key={notif.id}
                       onClick={() => handleNotificationClick(notif)}
-                      className={`p-4 border-b flex gap-4 transition-all duration-300 relative group cursor-pointer ${
-                        !notif.read
-                          ? isDark ? 'bg-slate-750 border-slate-700/50' : 'bg-blue-50/40 border-slate-50'
-                          : isDark ? 'hover:bg-slate-700 border-slate-700/50' : 'hover:bg-slate-50 border-slate-100'
+                      className={`p-4 border-b border-platinum-silver flex gap-4 transition-all duration-300 relative group cursor-pointer ${
+                        !notif.read ? 'bg-blue-50/40' : 'hover:bg-mist-silver/30'
                       }`}
                     >
-                      <div className={`mt-0.5 shrink-0 ${notif.read ? (isDark ? 'text-slate-500' : 'text-slate-400') : 'text-blue-500'}`}>
+                      <div className={`mt-0.5 shrink-0 ${notif.read ? 'text-steel-gray' : 'text-blue-500'}`}>
                         {notif.read ? <Bell className="h-5 w-5" /> : <BellDot className="h-5 w-5" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-semibold truncate ${!notif.read ? (isDark ? 'text-slate-200' : 'text-slate-900') : (isDark ? 'text-slate-300' : 'text-slate-700')}`}>
+                        <p className={`text-sm font-semibold truncate ${!notif.read ? 'text-charcoal' : 'text-slate-gray'}`}>
                           {notif.title}
                         </p>
-                        <p className={`text-xs mt-0.5 line-clamp-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                        <p className="text-xs mt-0.5 line-clamp-2 text-steel-gray">
                           {notif.message}
                         </p>
-                        <p className={`text-[10px] font-medium mt-2 ${!notif.read ? 'text-blue-500' : (isDark ? 'text-slate-500' : 'text-slate-400')}`}>
+                        <p className={`text-[10px] font-medium mt-2 ${!notif.read ? 'text-blue-500' : 'text-steel-gray'}`}>
                           {formatTimestamp(notif.timestamp)}
                         </p>
                       </div>
@@ -165,9 +153,9 @@ export const NotificationPanel = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className={`p-8 text-center flex flex-col items-center ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+                    className="p-8 text-center flex flex-col items-center text-steel-gray"
                   >
-                    <Bell className={`h-10 w-10 mb-3 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
+                    <Bell className="h-10 w-10 mb-3 text-brushed-silver" />
                     <p className="text-sm font-medium">No notifications</p>
                     <p className="text-xs mt-1">You're all caught up!</p>
                   </motion.div>

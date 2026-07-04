@@ -7,8 +7,8 @@ export function PublicationCategoryGrid({ categories, canCreate, canEdit, canDel
     <div className="space-y-6 animate-fade-in font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
         <div>
-          <h2 className="text-lg font-bold text-charcoal dark:text-slate-100">Select Manuscript Category</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Choose the appropriate category for your research publication to proceed.</p>
+          <h2 className="text-lg font-bold text-charcoal">Select Manuscript Category</h2>
+          <p className="text-sm text-steel-gray mt-1">Choose the appropriate category for your research publication to proceed.</p>
         </div>
         
         {canCreate && (

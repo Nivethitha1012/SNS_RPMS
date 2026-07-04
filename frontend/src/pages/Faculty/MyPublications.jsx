@@ -17,6 +17,8 @@ export const PublicationsPage = ({
   const [fSearchText, setFSearchText] = useState('');
   const [fStatusFilter, setFStatusFilter] = useState('All');
   const [isFacultySearchExpanded, setIsFacultySearchExpanded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   // States for reupload and pay-to-unlock
   const [selectedFileMap, setSelectedFileMap] = useState({});
@@ -60,6 +62,15 @@ export const PublicationsPage = ({
     const matchesStatus = fStatusFilter === 'All' || p.status === fStatusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  const totalPages = Math.ceil(filteredFacultyPubs.length / ITEMS_PER_PAGE);
+  const paginatedFacultyPubs = filteredFacultyPubs.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => { setCurrentPage(1); }, [fSearchText, fStatusFilter]);
 
   return (
     <div className="space-y-6 w-full">
@@ -149,9 +160,9 @@ export const PublicationsPage = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-150 text-slate-650">
-                    {filteredFacultyPubs.map((pub, index) => (
+                    {paginatedFacultyPubs.map((pub, index) => (
                       <tr key={pub.id} className="hover:bg-slate-50/50 transition-colors font-sans py-3">
-                        <td className="p-4 text-slate-400 text-center">{index + 1}</td>
+                        <td className="p-4 text-slate-400 text-center">{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                         <td className="p-4 font-mono font-bold text-slate-400 text-center">{pub.id}</td>
                         <td className="p-4 max-w-sm text-left">
                           <span className="font-bold text-slate-900 block leading-snug">{pub.title}</span>
@@ -192,6 +203,53 @@ export const PublicationsPage = ({
                 </table>
               </div>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between border-t border-platinum-silver bg-pure-white px-5 py-4 rounded-b-xl">
+                <p className="text-xs text-steel-gray font-medium">
+                  Showing <span className="font-bold text-charcoal">{filteredFacultyPubs.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
+                  <span className="font-bold text-charcoal">{Math.min(currentPage * ITEMS_PER_PAGE, filteredFacultyPubs.length)}</span>{' '}
+                  of <span className="font-bold text-charcoal">{filteredFacultyPubs.length}</span> results
+                </p>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage <= 1}
+                    className="relative inline-flex items-center rounded-l-xl px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver hover:bg-frost-gray disabled:opacity-40 disabled:cursor-not-allowed bg-pure-white transition-colors"
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }).map((_, idx) => {
+                    const p = idx + 1;
+                    if (totalPages > 7 && (p < currentPage - 2 || p > currentPage + 2) && p !== 1 && p !== totalPages) {
+                      if (p === 2 || p === totalPages - 1) return <span key={p} className="relative inline-flex items-center px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver bg-pure-white">...</span>;
+                      return null;
+                    }
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => setCurrentPage(p)}
+                        className={`relative inline-flex items-center px-3 py-2 text-xs font-bold ring-1 ring-inset ring-platinum-silver transition-colors ${
+                          p === currentPage
+                            ? 'z-10 bg-charcoal text-pure-white shadow-sm'
+                            : 'text-charcoal bg-pure-white hover:bg-frost-gray'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage >= totalPages}
+                    className="relative inline-flex items-center rounded-r-xl px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver hover:bg-frost-gray disabled:opacity-40 disabled:cursor-not-allowed bg-pure-white transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </>
       ) : (

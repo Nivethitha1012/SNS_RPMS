@@ -32,12 +32,12 @@ export function AdminFacultyProfilesPage() {
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchFaculty(1, 20, searchQuery, selectedInstitution);
+    fetchFaculty(1, 10, searchQuery, selectedInstitution);
     fetchFields();
   }, [fetchFaculty, fetchFields, searchQuery, selectedInstitution]);
 
   const handlePageChange = (newPage) => {
-    fetchFaculty(newPage, 20, searchQuery, selectedInstitution);
+    fetchFaculty(newPage, 10, searchQuery, selectedInstitution);
   };
 
   const handleSearch = (query) => {

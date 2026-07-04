@@ -7,12 +7,12 @@ export function useFacultyList() {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 10,
     total: 0,
     totalPages: 0
   });
 
-  const fetchFaculty = useCallback(async (page = 1, limit = 20, search = '', institutionFilters = ['All Institutions']) => {
+  const fetchFaculty = useCallback(async (page = 1, limit = 10, search = '', institutionFilters = ['All Institutions']) => {
     setLoading(true);
     setError(null);
     try {

@@ -387,10 +387,23 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body, aside, main, header, .glass-panel, div, p, span, h1, h2, h3, h4, h5, h6, table, tr, td, th, input, select, textarea, button, a {
+html, body, aside, main, header, .glass-panel, div, p, span, h1, h2, h3, h4, h5, h6, input, select, textarea, button, a {
   transition-property: background-color, border-color, box-shadow, fill, stroke;
-  transition-duration: 0.3s;
+  transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tables intentionally excluded from background transitions to prevent theme-switch flash */
+table, tr, td, th {
+  transition-property: color, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Kill ALL transitions during theme toggle to prevent flash/delay on any element */
+.theme-switching,
+.theme-switching * {
+  transition: none !important;
 }
 
 .dark {

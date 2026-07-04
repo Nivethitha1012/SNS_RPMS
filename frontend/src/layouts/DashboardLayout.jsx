@@ -122,8 +122,8 @@ export default function DashboardLayout() {
   const isDark = theme === 'dark';
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row relative h-screen w-full overflow-hidden bg-white">
-      <SessionModal isOpen={sessionExpiryOpen} onClose={() => {}} onLogout={handleSignOut} timeLeft={sessionTimeLeft} />
+    <div className="flex-1 flex flex-col lg:flex-row relative h-screen w-full overflow-hidden bg-arctic-white">
+      <SessionModal isOpen={sessionExpiryOpen} onClose={() => { }} onLogout={handleSignOut} timeLeft={sessionTimeLeft} />
       <LogoutConfirmationModal isOpen={logoutConfirmOpen} onClose={() => setLogoutConfirmOpen(false)} onConfirm={handleSignOut} />
 
       {!isSidebarCollapsed && (
@@ -195,11 +195,11 @@ export default function DashboardLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
-        <header className={`px-4 py-3 md:px-6 md:py-4 flex items-center justify-between shadow-xs select-none sticky top-0 z-40 ${isDark ? 'bg-slate-900 border-b border-slate-800' : 'bg-white border-b border-slate-200'}`}>
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-arctic-white">
+        <header className="px-4 py-3 md:px-6 md:py-4 flex items-center justify-between shadow-xs select-none sticky top-0 z-40 bg-pure-white border-b border-platinum-silver">
           <div className="flex items-center gap-3 text-left">
-            <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className={`lg:hidden p-2 rounded-xl transition-all duration-200 shrink-0 cursor-pointer ${isDark ? 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white' : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}><Menu className="h-5 w-5 animate-ham-open" /></button>
-            <h1 className={`text-sm sm:text-base md:text-lg font-black font-serif leading-none tracking-tight ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>
+            <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="lg:hidden p-2 rounded-xl transition-all duration-200 shrink-0 cursor-pointer bg-frost-gray border border-platinum-silver text-charcoal hover:bg-mist-silver/50"><Menu className="h-5 w-5 animate-ham-open" /></button>
+            <h1 className="text-sm sm:text-base md:text-lg font-black font-serif leading-none tracking-tight text-charcoal">
               {getPageTitle()}
             </h1>
           </div>
@@ -208,7 +208,7 @@ export default function DashboardLayout() {
             {currentUser.role !== 'Developer' && <NotificationPanel />}
           </div>
         </header>
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 min-w-0">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 min-w-0 bg-arctic-white">
           <div className="w-full max-w-[1600px] mx-auto space-y-4 sm:space-y-5 md:space-y-6 min-w-0">
             <Outlet />
           </div>

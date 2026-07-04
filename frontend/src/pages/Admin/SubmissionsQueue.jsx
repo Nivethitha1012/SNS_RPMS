@@ -32,6 +32,8 @@ export const AdminQueuePage = ({
   const [aStatusFilter, setAStatusFilter] = useState('All statuses');
   const [aInstitutionFilter, setAInstitutionFilter] = useState(['All Institutions']);
   const [isAdminSearchExpanded, setIsAdminSearchExpanded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const adminSearchContainerRef = useRef(null);
   const adminSearchInputRef = useRef(null);
@@ -62,6 +64,7 @@ export const AdminQueuePage = ({
     setASearchText('');
     setAStatusFilter('All statuses');
     setAInstitutionFilter(['All Institutions']);
+    setCurrentPage(1);
   };
 
   // Admin submission table list filter
@@ -86,6 +89,15 @@ export const AdminQueuePage = ({
 
     return matchesSearch && matchesStatus && matchesInst;
   });
+
+  const totalPages = Math.ceil(filteredAdminPubs.length / ITEMS_PER_PAGE);
+  const paginatedPubs = filteredAdminPubs.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset to page 1 whenever filters change
+  React.useEffect(() => { setCurrentPage(1); }, [aSearchText, aStatusFilter, aInstitutionFilter]);
 
   return (
     <div className="space-y-6 w-full animate-fade-in">
@@ -198,9 +210,9 @@ export const AdminQueuePage = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-655">
-                {filteredAdminPubs.map((pub, index) => (
+                {paginatedPubs.map((pub, index) => (
                   <tr key={pub.id} className="hover:bg-slate-50/40 transition-colors py-2 font-medium">
-                    <td className="p-4 text-slate-400 text-center">{index + 1}</td>
+                    <td className="p-4 text-slate-400 text-center">{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                     <td className="p-4 font-mono font-bold text-slate-400 text-center">{pub.id}</td>
                     <td className="p-4 max-w-xs truncate leading-snug font-bold text-slate-900 text-left" title={pub.title}>{pub.title}</td>
                     <td className="p-4 text-slate-505 text-center">{pub.category || 'N/A'}</td>
@@ -258,6 +270,53 @@ export const AdminQueuePage = ({
             </table>
           </div>
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-platinum-silver bg-pure-white px-5 py-4 rounded-b-xl">
+            <p className="text-xs text-steel-gray font-medium">
+              Showing <span className="font-bold text-charcoal">{filteredAdminPubs.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
+              <span className="font-bold text-charcoal">{Math.min(currentPage * ITEMS_PER_PAGE, filteredAdminPubs.length)}</span>{' '}
+              of <span className="font-bold text-charcoal">{filteredAdminPubs.length}</span> results
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage <= 1}
+                className="relative inline-flex items-center rounded-l-xl px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver hover:bg-frost-gray disabled:opacity-40 disabled:cursor-not-allowed bg-pure-white transition-colors"
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const p = idx + 1;
+                if (totalPages > 7 && (p < currentPage - 2 || p > currentPage + 2) && p !== 1 && p !== totalPages) {
+                  if (p === 2 || p === totalPages - 1) return <span key={p} className="relative inline-flex items-center px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver bg-pure-white">...</span>;
+                  return null;
+                }
+                return (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={`relative inline-flex items-center px-3 py-2 text-xs font-bold ring-1 ring-inset ring-platinum-silver transition-colors ${
+                      p === currentPage
+                        ? 'z-10 bg-charcoal text-pure-white shadow-sm'
+                        : 'text-charcoal bg-pure-white hover:bg-frost-gray'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage >= totalPages}
+                className="relative inline-flex items-center rounded-r-xl px-3 py-2 text-xs font-bold text-charcoal ring-1 ring-inset ring-platinum-silver hover:bg-frost-gray disabled:opacity-40 disabled:cursor-not-allowed bg-pure-white transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

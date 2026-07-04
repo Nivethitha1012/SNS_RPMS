@@ -27,7 +27,17 @@ export const ThemeProvider = ({ children }) => {
   }, [theme]);
 
   const toggleTheme = () => {
+    const root = document.documentElement;
+    // Suppress all transitions while the theme class flips
+    root.classList.add('theme-switching');
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    // Two rAFs: first waits for React to commit the state,
+    // second waits for the browser to paint before re-enabling transitions
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.remove('theme-switching');
+      });
+    });
   };
 
   return (
