@@ -44,19 +44,25 @@ export function SearchableDropdown({ options, value, onChange, placeholder = "Se
       if (value.includes('All Institutions') && value.length === 1) return <span className="truncate pr-2">All Institutions</span>;
       
       return (
-        <div className="flex items-center gap-2 pr-2 whitespace-nowrap">
-          {value.map(val => (
-            <span key={val} className="flex items-center gap-1">
-              <span>{val}</span>
-              <X 
-                className="w-3.5 h-3.5 hover:text-red-500 cursor-pointer text-slate-400 transition-colors" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveItem(val);
-                }} 
-              />
+        <div className="flex items-center gap-2 pr-2 w-full overflow-hidden">
+          <span className="flex items-center gap-1 min-w-0">
+            <span className="truncate">{value[0]}</span>
+            <X 
+              className="w-3.5 h-3.5 hover:text-red-500 cursor-pointer text-slate-400 transition-colors shrink-0" 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveItem(value[0]);
+              }} 
+            />
+          </span>
+          {value.length > 1 && (
+            <span 
+              className="flex items-center justify-center bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md border border-emerald-200 shrink-0"
+              title={value.slice(1).join(', ')}
+            >
+              +{value.length - 1}
             </span>
-          ))}
+          )}
         </div>
       );
     }
@@ -98,7 +104,7 @@ export function SearchableDropdown({ options, value, onChange, placeholder = "Se
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-between w-full h-9 bg-white border ${isOpen ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-slate-300'} text-slate-700 text-xs font-semibold rounded-lg px-2 sm:px-3 outline-none shadow-sm transition-all hover:border-slate-400`}
       >
-        <div className="flex-1 text-left flex items-center overflow-x-auto hide-scrollbar custom-scrollbar">
+        <div className="flex-1 text-left flex items-center overflow-hidden min-w-0">
           {renderDisplay()}
         </div>
         <div className="flex items-center space-x-1 shrink-0 pl-1">
