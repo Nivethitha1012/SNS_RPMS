@@ -57,7 +57,8 @@ export const AssignRolePage = () => {
       const response = await fetch(`${config.apiBaseUrl}/developer/settings`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('rpms_token')}`
-        }
+        },
+        credentials: 'include'
       });
       const resData = await response.json();
       if (resData.success) {
@@ -78,6 +79,7 @@ export const AssignRolePage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('rpms_token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({ key: 'landing_page_enabled', value: newValue ? 'true' : 'false' })
       });
       const resData = await response.json();

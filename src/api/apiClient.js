@@ -7,6 +7,7 @@ export const TOKEN_KEY = 'rpms_token';
 export const apiClient = axios.create({
   baseURL: config.apiBaseUrl,
   timeout: config.requestTimeoutMs,
+  withCredentials: true,
 });
 
 // Attach JWT on every request

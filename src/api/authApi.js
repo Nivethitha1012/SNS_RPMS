@@ -22,8 +22,14 @@ export const login = async (ssoPayload) => {
 };
 
 export const logout = async () => {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(SESSION_KEY);
+  try {
+    await apiClient.post('/auth/logout');
+  } catch (err) {
+    console.error('Logout API call failed:', err);
+  } finally {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(SESSION_KEY);
+  }
   return { success: true };
 };
 

@@ -27,7 +27,8 @@ export const downloadFromUrl = async (url, fileName) => {
     const response = await fetch(`${config.apiBaseUrl}/download-proxy?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(fileName || 'document.pdf')}`, {
       headers: {
         ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      }
+      },
+      credentials: 'include'
     });
 
     if (!response.ok) {

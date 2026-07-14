@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
-import { Eye, FileText, CheckCircle2, AlertCircle, ArrowLeft, Download, UploadCloud, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Eye, FileText, CheckCircle2, AlertCircle, ArrowLeft, Download, UploadCloud, Trash2, Loader2 } from 'lucide-react';
 import { downloadFromUrl } from '../services/uploadService';
+import config from '../config';
 
 export function AdminReviews({
   publications,
@@ -16,6 +17,46 @@ export function AdminReviews({
 }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [reviewFile, setReviewFile] = useState(null);
+  const [activeView, setActiveView] = useState({ type: null, url: null }); // type: 'manuscript' | 'review' | null
+  const [viewLoading, setViewLoading] = useState(null); // 'manuscript' | 'review' | null
+
+  // Revoke blob URL when component unmounts to free memory
+  useEffect(() => () => { if (activeView.url) URL.revokeObjectURL(activeView.url); }, [activeView.url]);
+
+  // handleView reuses the exact same fetch+auth logic as downloadFromUrl,
+  // but instead of triggering a download it creates a blob: URL for the iframe.
+  const handleView = async (url, type) => {
+    if (activeView.type === type) {
+      // Already showing this type — toggle off and free memory
+      if (activeView.url) URL.revokeObjectURL(activeView.url);
+      setActiveView({ type: null, url: null });
+      return;
+    }
+
+    // If switching to a different view, revoke the old one to free memory
+    if (activeView.url) URL.revokeObjectURL(activeView.url);
+
+    setViewLoading(type);
+    try {
+      const token = localStorage.getItem('rpms_token');
+      const response = await fetch(
+        `${config.apiBaseUrl}/download-proxy?url=${encodeURIComponent(url)}&filename=preview.pdf`,
+        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+      );
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      const raw = await response.blob();
+
+      // Unconditionally force application/pdf. If the original content-type was
+      // a Word doc or binary, preserving it causes the iframe to trigger a download.
+      // Forcing it to pdf ensures the browser renders it inline in the viewer.
+      const fileBlob = new Blob([raw], { type: 'application/pdf' });
+      setActiveView({ type, url: URL.createObjectURL(fileBlob) });
+    } catch (err) {
+      console.error('[EvaluationPanel] handleView failed:', err);
+    } finally {
+      setViewLoading(null);
+    }
+  };
 
   // Active Pending reviews
   const pendingPubs = publications.filter(p => p.status === 'Submitted');
@@ -101,25 +142,35 @@ export function AdminReviews({
                   </div>
                 </div>
                 {activePub.manuscriptUrl ? (
-                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto shrink-0">
-                    <a
-                      href={activePub.manuscriptUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-frost-gray hover:bg-mist-silver border border-platinum-silver rounded-lg text-charcoal flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0"
-                      title="View Manuscript"
-                    >
-                      <Eye className="h-4 w-4 text-charcoal" />
-                      <span>View</span>
-                    </a>
-                    <button
-                      onClick={() => downloadFromUrl(activePub.manuscriptUrl, `Manuscript_${activePub.id}.pdf`)}
-                      className="px-4 py-2 bg-frost-gray hover:bg-mist-silver border border-platinum-silver rounded-lg text-charcoal flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0"
-                      title="Download Manuscript"
-                    >
-                      <Download className="h-4 w-4" />
-                      <span>Download</span>
-                    </button>
+                  <div className="flex flex-col gap-3 w-full">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
+                      <button
+                        type="button"
+                        onClick={() => handleView(activePub.manuscriptUrl, 'manuscript')}
+                        className="px-4 py-2 bg-frost-gray hover:bg-mist-silver border border-platinum-silver rounded-lg text-charcoal flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0"
+                        title="View Manuscript"
+                      >
+                        {viewLoading === 'manuscript' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4 text-charcoal" />}
+                        <span>{activeView.type === 'manuscript' ? 'Close' : 'View'}</span>
+                      </button>
+                      {/* Download — unchanged */}
+                      <button
+                        onClick={() => downloadFromUrl(activePub.manuscriptUrl, `Manuscript_${activePub.id}.pdf`)}
+                        className="px-4 py-2 bg-frost-gray hover:bg-mist-silver border border-platinum-silver rounded-lg text-charcoal flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0"
+                        title="Download Manuscript"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>Download</span>
+                      </button>
+                    </div>
+                    {activeView.type === 'manuscript' && (
+                      <iframe
+                        src={activeView.url}
+                        className="w-full rounded-xl border border-slate-200"
+                        style={{ height: '640px' }}
+                        title="Manuscript Viewer"
+                      />
+                    )}
                   </div>
                 ) : (
                   <span className="text-xs text-slate-400 italic">No file available</span>
@@ -145,25 +196,35 @@ export function AdminReviews({
                       </div>
                     </div>
                     {activePub.reviewUrl ? (
-                      <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto shrink-0">
-                        <a
-                          href={activePub.reviewUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0 shadow-sm"
-                          title="View Reviewed Document"
-                        >
-                          <Eye className="h-4 w-4 text-white" />
-                          <span>View Review</span>
-                        </a>
-                        <button
-                          onClick={() => downloadFromUrl(activePub.reviewUrl, `Review_${activePub.id}.pdf`)}
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0 shadow-sm"
-                          title="Download Reviewed Document"
-                        >
-                          <Download className="h-4 w-4" />
-                          <span>Download Review</span>
-                        </button>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleView(activePub.reviewUrl, 'review')}
+                            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0 shadow-sm"
+                            title="View Reviewed Document"
+                          >
+                            {viewLoading === 'review' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4 text-white" />}
+                            <span>{activeView.type === 'review' ? 'Close' : 'View Review'}</span>
+                          </button>
+                          {/* Download — unchanged */}
+                          <button
+                            onClick={() => downloadFromUrl(activePub.reviewUrl, `Review_${activePub.id}.pdf`)}
+                            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center justify-center space-x-1.5 transition-colors text-xs font-bold w-full sm:w-auto shrink-0 shadow-sm"
+                            title="Download Reviewed Document"
+                          >
+                            <Download className="h-4 w-4" />
+                            <span>Download Review</span>
+                          </button>
+                        </div>
+                        {activeView.type === 'review' && (
+                          <iframe
+                            src={activeView.url}
+                            className="w-full rounded-xl border border-emerald-200"
+                            style={{ height: '640px' }}
+                            title="Review Viewer"
+                          />
+                        )}
                       </div>
                     ) : (
                       <span className="text-xs text-slate-400 italic">No file available</span>
