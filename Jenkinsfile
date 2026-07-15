@@ -35,12 +35,9 @@ pipeline {
                 dir('frontend') {
                     sh '''
                     CI=false npm run build
-                    echo "----- Checking vite.config for root/outDir overrides -----"
-                    cat vite.config.* 2>/dev/null || echo "No vite.config file found"
-                    echo "----- Searching ENTIRE workspace for dist folders -----"
-                    find "$WORKSPACE" -maxdepth 5 -type d -iname "dist" 2>/dev/null
-                    echo "----- Current directory contents -----"
-                    ls -la
+                    echo "----- Verifying dist/index.html exists -----"
+                    ls -la dist
+                    test -f dist/index.html || (echo "ERROR: dist/index.html missing after build!" && exit 1)
                     '''
                 }
             }
@@ -49,13 +46,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh '''
-                    DIST_PATH=$(find "$WORKSPACE" -maxdepth 5 -type d -iname "dist" 2>/dev/null | head -n 1)
-                    if [ -z "$DIST_PATH" ]; then
-                        echo "ERROR: Could not locate a dist folder anywhere in the workspace!"
-                        exit 1
-                    fi
-                    echo "Found dist folder at: $DIST_PATH"
-                    aws s3 sync "$DIST_PATH" s3://$S3_BUCKET/ \
+                    aws s3 sync dist/ s3://$S3_BUCKET/ \
                     --region $AWS_REGION \
                     --delete
                     '''
