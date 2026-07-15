@@ -106,30 +106,39 @@ pipeline {
         }
 
         stage('Upload to S3') {
-            steps {
-                dir('frontend') {
-                    sh '''
-                    set -ex
+    steps {
+        dir('frontend') {
+            sh '''
+            set -ex
 
-                    aws s3 sync dist s3://$S3_BUCKET/ \
-                        --delete \
-                        --region $AWS_REGION
-                    '''
-                }
-            }
+            pwd
+            ls -la dist
+
+            aws sts get-caller-identity
+
+            aws s3 ls s3://$S3_BUCKET
+
+            aws s3 sync dist s3://$S3_BUCKET/ \
+                --delete \
+                --region $AWS_REGION
+            '''
         }
+    }
+}
 
-        stage('Invalidate CloudFront') {
-            steps {
-                sh '''
-                set -ex
+stage('Invalidate CloudFront') {
+    steps {
+        sh '''
+        set -ex
 
-                aws cloudfront create-invalidation \
-                    --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
-                    --paths "/*"
-                '''
-            }
-        }
+        aws sts get-caller-identity
+
+        aws cloudfront create-invalidation \
+            --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
+            --paths "/*"
+        '''
+    }
+}
     }
 
     post {
