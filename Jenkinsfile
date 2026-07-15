@@ -40,7 +40,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh '''
-                    aws s3 sync build s3://$S3_BUCKET/ \
+                    aws s3 sync dist s3://$S3_BUCKET/ \
                     --region $AWS_REGION \
                     --delete
                     '''
