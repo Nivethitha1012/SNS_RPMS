@@ -1,5 +1,4 @@
 pipeline {
-    agent any
 
     options {
         disableConcurrentBuilds()
@@ -14,8 +13,7 @@ pipeline {
         S3_BUCKET = "publications.snsihub.ai"
         CLOUDFRONT_DISTRIBUTION_ID = "E17RWJDWEYRP48"
         VITE_ENABLE_MOCK = "false"
-        VITE_RAZORPAY_KEY_ID = "rzp_test_T8UWvt2fHT2O7a"
-        VITE_API_BASE_URL="https://app.snsihub.ai/api"
+        VITE_API_BASE_URL = "https://app.snsihub.ai/api"
     }
 
     stages {

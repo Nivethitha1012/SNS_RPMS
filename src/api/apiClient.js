@@ -7,6 +7,7 @@ export const TOKEN_KEY = 'rpms_token';
 export const apiClient = axios.create({
   baseURL: config.apiBaseUrl,
   timeout: config.requestTimeoutMs,
+  withCredentials: true,
 });
 
 // Attach JWT on every request
@@ -95,4 +96,15 @@ export const getFriendlyErrorMessage = (err) => {
   }
 
   return err.message || 'An unexpected error occurred. Please try again.';
+};
+
+export const getAbsolutePdfUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  try {
+    const origin = new URL(config.apiBaseUrl).origin;
+    return `${origin}${url.startsWith('/') ? url : '/' + url}`;
+  } catch (e) {
+    return url;
+  }
 };

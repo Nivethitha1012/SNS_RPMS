@@ -285,7 +285,7 @@ export const UploadPage = ({ currentUser, onSuccess, onCancelSubmission }) => {
       const order = await processPayment(customPubId);
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: order.key,
         amount: order.amount.toString(),
         currency: order.currency,
         name: "SNS RPMS",

@@ -35,9 +35,9 @@ const FULL_INSTITUTION_MAP = {
  * - Otherwise capitalize the Okrion role (e.g. 'faculty' → 'Faculty')
  */
 const resolveRole = (row) => {
-    if (row.admin === true) return 'Admin';
     const raw = row.role || '';
     if (raw.toLowerCase() === 'developer') return 'Developer';
+    if (row.admin === true) return 'Admin';
     if (!raw) return 'Faculty';
     return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
 };

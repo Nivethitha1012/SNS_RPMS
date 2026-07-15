@@ -18,6 +18,9 @@ export const AdminEvaluationPage = ({
   const [selectedPubId, setSelectedPubId] = useState(id || null);
   const [directFetchedPub, setDirectFetchedPub] = useState(null);
 
+  // If the queue passed the pub via router state, use it immediately
+  const statePublication = location.state?.publication || null;
+
   useEffect(() => {
     if (id) {
       setSelectedPubId(id);
@@ -28,6 +31,12 @@ export const AdminEvaluationPage = ({
 
   useEffect(() => {
     if (selectedPubId) {
+      // Check router state first (passed from the queue — has correct author)
+      if (statePublication && statePublication.id === selectedPubId) {
+        setDirectFetchedPub(statePublication);
+        return;
+      }
+      // Then check the publications list prop
       const found = publications.find(p => p.id === selectedPubId);
       if (!found) {
         publicationService.getPublicationDetail(selectedPubId)

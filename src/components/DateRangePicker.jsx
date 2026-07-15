@@ -142,7 +142,7 @@ export const DateRangePicker = ({ startDate, endDate, onChange }) => {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     return (
-      <div className="flex flex-col w-[230px] p-3">
+      <div className="flex flex-col w-57.5 p-3">
         <div className="flex justify-between items-center mb-4">
           <button 
             type="button"
@@ -213,7 +213,20 @@ export const DateRangePicker = ({ startDate, endDate, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-12 right-0 z-[9999] bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden animate-fade-in origin-top-right flex flex-col min-w-max">
+        <div
+          className="fixed z-9999 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in flex flex-col min-w-max"
+          style={(() => {
+            if (!containerRef.current) return {};
+            const rect = containerRef.current.getBoundingClientRect();
+            const dropdownWidth = 250; // approx calendar width
+            // Align to button's left, but clamp so it doesn't overflow right edge
+            const left = Math.min(rect.left, window.innerWidth - dropdownWidth - 12);
+            return {
+              top: `${rect.bottom + 6}px`,
+              left: `${Math.max(8, left)}px`,
+            };
+          })()}
+        >
           <div className="flex flex-col md:flex-row justify-center items-center w-full divide-y md:divide-y-0 md:divide-x divide-slate-100">
             {renderCalendar(currentDate1, setCurrentDate1)}
           </div>
@@ -222,7 +235,7 @@ export const DateRangePicker = ({ startDate, endDate, onChange }) => {
             <div className="flex items-center justify-between gap-3 w-full">
               <div className="flex flex-col">
                 <label className="text-[10px] font-bold text-slate-400 uppercase mb-1">Start date</label>
-                <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2 py-1.5 w-[110px] shadow-sm">
+                <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2 py-1.5 w-27.5 shadow-sm">
                   <CalendarIcon className="h-3 w-3 text-slate-400 mr-2" />
                   <input 
                     type="text" 
@@ -235,7 +248,7 @@ export const DateRangePicker = ({ startDate, endDate, onChange }) => {
               </div>
               <div className="flex flex-col">
                 <label className="text-[10px] font-bold text-slate-400 uppercase mb-1">End date</label>
-                <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2 py-1.5 w-[110px] shadow-sm">
+                <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2 py-1.5 w-27.5 shadow-sm">
                   <CalendarIcon className="h-3 w-3 text-slate-400 mr-2" />
                   <input 
                     type="text" 

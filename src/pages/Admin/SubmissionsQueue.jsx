@@ -213,7 +213,7 @@ export const AdminQueuePage = ({
                           <button
                             onClick={() => {
                               const prefix = location.pathname.startsWith('/faculty') ? '/faculty' : '/admin';
-                              navigate(`${prefix}/evaluation/${pub.id}`);
+                              navigate(`${prefix}/evaluation/${pub.id}`, { state: { publication: pub } });
                             }}
                             className="text-slate-gray hover:text-charcoal bg-white border border-platinum-silver hover:bg-slate-50 p-2 rounded-xl transition-colors shadow-2xs inline-flex items-center justify-center"
                             title="Evaluate"

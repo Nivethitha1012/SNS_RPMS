@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { getAbsolutePdfUrl } from '../api/apiClient';
 import { 
   Eye, 
   FileText, 
@@ -123,7 +124,7 @@ export function TempAdminDashboard({
                     </div>
                     {activePub.manuscriptUrl ? (
                       <a
-                        href={activePub.manuscriptUrl}
+                        href={getAbsolutePdfUrl(activePub.manuscriptUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 bg-frost-gray hover:bg-mist-silver border border-platinum-silver rounded-lg text-charcoal flex items-center justify-center cursor-pointer transition-colors"
