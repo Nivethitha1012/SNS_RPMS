@@ -28,19 +28,21 @@ pipeline {
         stage('Verify Workspace') {
             steps {
                 sh '''
-                pwd
-                echo "===== Workspace Files ====="
-                ls -la
-                echo "===== package.json ====="
-                cat package.json
-                '''
-            }
-        }
+                set -ex
 
-        stage('Check Node & npm') {
-            steps {
-                sh '''
+                echo "Current Workspace:"
+                pwd
+
+                echo "Workspace Contents:"
+                ls -la
+
+                echo "Package.json:"
+                cat package.json
+
+                echo "Node Version:"
                 node -v
+
+                echo "NPM Version:"
                 npm -v
                 '''
             }
@@ -50,7 +52,7 @@ pipeline {
             steps {
                 sh '''
                 set -ex
-                rm -rf node_modules
+
                 npm ci
                 '''
             }
@@ -67,10 +69,11 @@ pipeline {
                 ls -la
 
                 if [ ! -d dist ]; then
-                    echo "ERROR: dist folder not found"
+                    echo "ERROR: dist folder not found!"
                     exit 1
                 fi
 
+                echo "===== Dist Contents ====="
                 ls -la dist
                 '''
             }
@@ -84,8 +87,8 @@ pipeline {
                 aws sts get-caller-identity
 
                 aws s3 sync dist s3://$S3_BUCKET \
-                    --delete \
-                    --region $AWS_REGION
+                    --region $AWS_REGION \
+                    --delete
                 '''
             }
         }
@@ -110,6 +113,14 @@ pipeline {
 
         failure {
             echo '❌ Frontend Deployment Failed!'
+        }
+
+        always {
+            sh '''
+            echo "===== Final Workspace ====="
+            pwd
+            ls -la
+            '''
         }
     }
 }
