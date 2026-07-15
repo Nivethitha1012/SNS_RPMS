@@ -64,7 +64,7 @@ const Divider = ({ isDark }) => (
   <hr className={`my-8 ${isDark ? 'border-white/8' : 'border-slate-100'}`} />
 );
 
-export default function PrivacyPolicy() {
+export default function RefundPolicy() {
   const { isDark } = useTheme();
 
   return (
@@ -89,7 +89,7 @@ export default function PrivacyPolicy() {
       <div className={`border-b py-10 px-6 ${isDark ? 'bg-[#0a0a0a] border-white/5' : 'bg-slate-50 border-slate-100'}`}>
         <div className="max-w-3xl mx-auto">
           <span className={`text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Legal</span>
-          <h1 className={`text-2xl font-bold mt-1 mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>Privacy Policy</h1>
+          <h1 className={`text-2xl font-bold mt-1 mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>Refund &amp; Cancellation Policy</h1>
           <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
             Effective: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
             &nbsp;·&nbsp; SNS Publications
@@ -99,50 +99,73 @@ export default function PrivacyPolicy() {
 
       <main className="max-w-3xl mx-auto px-6 py-12">
 
-        <Section number="01" title="Introduction" isDark={isDark}>
+        {/* No Refund Notice */}
+        <div className={`flex gap-3 p-4 rounded-xl mb-10 border ${isDark ? 'bg-red-500/8 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-700'}`}>
+          <span className="text-lg leading-none mt-0.5">⚠️</span>
+          <div>
+            <p className="text-sm font-bold mb-0.5">No Refunds Policy</p>
+            <p className="text-sm leading-6 opacity-90">
+              All fees paid through SNS Publications are <strong>strictly non-refundable</strong>. Once a payment is
+              confirmed, no refund will be issued under any circumstance, including manuscript non-accuracy,
+              voluntary withdrawal, or account suspension.
+            </p>
+          </div>
+        </div>
+
+        <Section number="01" title="Overview" isDark={isDark}>
           <p>
-            SNS Publications respects your privacy. This policy outlines how we collect, use, and safeguard your information on our Research Publication Management platform. By using our services, you consent to these practices.
+            This policy governs all financial transactions processed through SNS Publications. By completing a
+            payment, you acknowledge and fully accept the no-refund terms stated above.
           </p>
         </Section>
 
         <Divider isDark={isDark} />
 
-        <Section number="02" title="Information Collection & Use" isDark={isDark}>
+        <Section number="02" title="Publication Fees" isDark={isDark}>
           <p>
-            We collect essential personal data (such as your name, email, and academic details) and standard usage metrics to:
-          </p>
-          <ul className="list-disc pl-5 space-y-1 mt-2">
-            <li>Process manuscript submissions efficiently</li>
-            <li>Facilitate peer review with editors and reviewers</li>
-            <li>Send updates regarding your publication status</li>
-            <li>Improve platform security and overall performance</li>
-          </ul>
-        </Section>
-
-        <Divider isDark={isDark} />
-
-        <Section number="03" title="Data Sharing & Security" isDark={isDark}>
-          <p>
-            Your data is securely shared only with relevant academic personnel (editors, reviewers, institutions) or when legally required. We never sell your personal information.
-          </p>
-          <p className="mt-3">
-            We employ strict security measures, including SSL encryption and secure data storage, to protect your information against unauthorised access or disclosure.
+            Where applicable, publication fees are communicated by the Admin team upon manuscript approval. Fees
+            vary by category (Journal, PHD, Conference, etc.) and are invoiced through the Payment &amp; Invoice
+            module. All fees must be settled before the publication process proceeds.
           </p>
         </Section>
 
         <Divider isDark={isDark} />
 
-        <Section number="04" title="Cookies & Your Rights" isDark={isDark}>
+        <Section number="03" title="Cancellation Rules" isDark={isDark}>
           <p>
-            We use essential and analytics cookies to optimise your user experience. You have the right to access, correct, restrict, or delete your personal data at any time.
+            <strong>No refund will be issued under any circumstances.</strong> Once a submission is made and
+            payment is confirmed, cancellations will not be entertained regardless of the stage —
+            whether before evaluation, during evaluation, or after a final decision has been issued.
+            All payments are final and non-reversible.
           </p>
         </Section>
 
         <Divider isDark={isDark} />
 
-        <Section number="05" title="Contact Us" isDark={isDark}>
-          <p className="mb-3">For any privacy-related inquiries or to exercise your data rights, please reach out to us:</p>
-          <ContactBlock isDark={isDark} />
+        <Section number="04" title="Non-Refundable Situations" isDark={isDark}>
+          <p>
+            All payments made through SNS Publications are <strong>non-refundable in every situation</strong>,
+            without exception. This includes — but is not limited to — manuscripts marked as non-accurate,
+            voluntary withdrawal, administrative fees, account termination, or dissatisfaction with the
+            peer-review outcome or timeline. No partial refunds, credits, or waivers will be granted.
+          </p>
+        </Section>
+
+        <Divider isDark={isDark} />
+
+        <Section number="05" title="Invoice Disputes" isDark={isDark}>
+          <p>
+            If an invoice contains an error (incorrect amount, duplicate entry, or wrong submission reference),
+            raise a dispute within <strong>7 days</strong> of the invoice date by contacting the Admin team.
+            Disputes raised after this period will not be considered. Invoice disputes do not entitle the user
+            to a refund but may result in invoice correction.
+          </p>
+        </Section>
+
+        <Divider isDark={isDark} />
+
+        <Section number="06" title="Contact" isDark={isDark}>
+          <ContactBlock isDark={isDark} extraText="Response time: within 5 working days" />
         </Section>
 
       </main>
@@ -175,7 +198,7 @@ export default function PrivacyPolicy() {
               <h4 className={`text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Legal</h4>
               <ul className="flex flex-col gap-3">
                 <li>
-                  <Link to="/privacy" className={`text-sm transition-colors ${isDark ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 font-semibold'}`}>
+                  <Link to="/privacy" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
                     Privacy Policy
                   </Link>
                 </li>
@@ -185,7 +208,7 @@ export default function PrivacyPolicy() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/refund" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
+                  <Link to="/refund" className={`text-sm transition-colors ${isDark ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 font-semibold'}`}>
                     Refund &amp; Cancellation Policy
                   </Link>
                 </li>

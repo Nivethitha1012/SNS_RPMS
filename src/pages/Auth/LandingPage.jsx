@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useTheme } from '../../context/ThemeContext';
@@ -10,6 +10,7 @@ import {
   CreditCard,
   Users,
   ArrowRight,
+  ArrowUp,
   Upload,
   CheckSquare,
   BarChart,
@@ -19,6 +20,7 @@ import {
   Mail,
 } from 'lucide-react';
 import rpmsLogo from '../../assets/logos/app-logo.png';
+import config from '../../config';
 import BlurText from '../../components/BlurText';
 import ScrollReveal from '../../components/ScrollReveal';
 
@@ -477,9 +479,109 @@ const GlareHover = ({
   );
 };
 
+/* ── 3-D Tilt Logo ─────────────────────────────────────────── */
+function TiltLogo({ src, alt, className }) {
+  const ref = useRef(null);
+  const [tiltTransform, setTiltTransform] = React.useState(
+    'perspective(400px) rotateX(0deg) rotateY(0deg) scale(1)'
+  );
+
+  const handleMouseMove = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const { left, top, width, height } = el.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    const rotateY = ((x / width) - 0.5) * 40;
+    const rotateX = -((y / height) - 0.5) * 40;
+    setTiltTransform(`perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.12)`);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setTiltTransform('perspective(400px) rotateX(0deg) rotateY(0deg) scale(1)');
+  }, []);
+
+  return (
+    <img
+      ref={ref}
+      src={src}
+      alt={alt}
+      className={className}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: tiltTransform,
+        transition: 'transform 0.15s ease-out',
+        cursor: 'pointer',
+        willChange: 'transform',
+        display: 'inline-block',
+      }}
+    />
+  );
+}
+
+/* ── 3-D Tilt Card ─────────────────────────────────────────── */
+function TiltCard({ children, className = '' }) {
+  const ref = useRef(null);
+  const [tiltStyle, setTiltStyle] = React.useState({});
+
+  const handleMouseMove = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const { left, top, width, height } = el.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    const rotateY = ((x / width) - 0.5) * 20;
+    const rotateX = -((y / height) - 0.5) * 20;
+    setTiltStyle({
+      transform: `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`,
+      transition: 'transform 0.12s ease-out',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.12)',
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setTiltStyle({
+      transform: 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)',
+      transition: 'transform 0.4s ease-out',
+      boxShadow: '',
+    });
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`h-full ${className}`}
+      style={{ willChange: 'transform', ...tiltStyle }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [scrolled, setScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrolled(scrollY > 20);
+      // Show back-to-top when user is in bottom 25% of the page
+      setShowBackToTop(pageHeight > 0 && scrollY >= pageHeight * 0.75);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <>
@@ -502,26 +604,33 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* Navbar */}
-        <nav className={`absolute top-0 w-full z-50 transition-all duration-300 border-b backdrop-blur-md ${isDark ? 'bg-[#0a0a0a]/80 border-white/5' : 'bg-white/80 border-slate-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Sticky Navbar — fixed on scroll, dynamic shadow and blur */}
+        <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b backdrop-blur-md ${scrolled
+            ? isDark
+              ? 'bg-[#0a0a0a]/95 border-white/10 shadow-lg shadow-black/20'
+              : 'bg-white/95 border-slate-200 shadow-md shadow-slate-200/60'
+            : isDark
+              ? 'bg-[#0a0a0a]/80 border-white/5'
+              : 'bg-white/80 border-slate-200'
+          }`}>
+          <div className="w-full px-4 sm:px-6 lg:px-12">
             <div className="flex justify-between items-center h-20">
-              <div className="flex items-center gap-3">
-                <img src={rpmsLogo} alt="RPMS Logo" className="h-10 w-auto object-contain" />
-                <span className={`font-bold text-lg hidden sm:block tracking-wide ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  RPMS
+              <div className="flex items-center gap-2 sm:gap-3">
+                <TiltLogo src={rpmsLogo} alt="RPMS Logo" className="h-8 sm:h-10 w-auto object-contain" />
+                <span className={`font-bold text-base sm:text-lg tracking-wide ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  SNS Publications
                 </span>
               </div>
               <div>
                 <Link to="/login">
                   <motion.button
-                     whileHover={{ scale: 1.05 }}
-                     whileTap={{ scale: 0.95 }}
-                     className="px-6 py-2.5 rounded-xl font-semibold text-sm transition-all text-white shadow-lg flex items-center gap-2"
-                     style={{
-                       background: isDark ? 'linear-gradient(135deg, #059669 0%, #047857 100%)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                       boxShadow: isDark ? '0 8px 24px rgba(4,120,87,0.3)' : '0 8px 24px rgba(5,150,105,0.3)'
-                     }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2.5 rounded-xl font-semibold text-sm transition-all text-white shadow-lg flex items-center gap-2"
+                    style={{
+                      background: isDark ? 'linear-gradient(135deg, #059669 0%, #047857 100%)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      boxShadow: isDark ? '0 8px 24px rgba(4,120,87,0.3)' : '0 8px 24px rgba(5,150,105,0.3)'
+                    }}
                   >
                     Sign In
                   </motion.button>
@@ -569,33 +678,30 @@ export default function LandingPage() {
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 15 }} className="pt-4">
-                <Link to="/login">
+                <style>{`
+                  @keyframes emerald-pulse {
+                    0%, 100% { box-shadow: 0 0 18px 4px rgba(16,185,129,0.45), 0 0 40px 8px rgba(5,150,105,0.25), 0 4px 24px rgba(4,120,87,0.35); }
+                    50% { box-shadow: 0 0 32px 10px rgba(16,185,129,0.65), 0 0 64px 18px rgba(5,150,105,0.38), 0 8px 32px rgba(4,120,87,0.45); }
+                  }
+                  .glow-btn {
+                    animation: emerald-pulse 2.4s ease-in-out infinite;
+                  }
+                  .glow-btn:hover {
+                    box-shadow: 0 0 40px 14px rgba(16,185,129,0.75), 0 0 80px 24px rgba(5,150,105,0.5), 0 8px 40px rgba(4,120,87,0.55) !important;
+                    animation: none;
+                  }
+                `}</style>
+                <Link to="/login" className="mx-auto block w-fit">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="mx-auto block"
+                    whileHover={{ scale: 1.06 }}
+                    whileTap={{ scale: 0.96 }}
+                    className={`glow-btn group flex items-center gap-3 px-9 py-4 rounded-xl font-bold text-base text-white transition-all duration-300 ${isDark
+                        ? 'bg-linear-to-r from-emerald-600 to-emerald-700'
+                        : 'bg-linear-to-r from-emerald-500 to-emerald-600'
+                      }`}
                   >
-                    <GlareHover
-                      width="auto"
-                      height="auto"
-                      background={isDark ? 'linear-gradient(135deg, #059669 0%, #047857 100%)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}
-                      borderRadius="12px"
-                      borderColor="transparent"
-                      glareColor="#ffffff"
-                      glareOpacity={0.6}
-                      glareAngle={-30}
-                      glareSize={250}
-                      transitionDuration={1500}
-                      className="px-8 py-4 font-bold text-base transition-all text-white shadow-xl group"
-                      style={{
-                        boxShadow: isDark ? '0 12px 32px rgba(4,120,87,0.4)' : '0 12px 32px rgba(5,150,105,0.4)'
-                      }}
-                    >
-                      <span className="relative z-10 flex items-center gap-3">
-                        Sign In to Continue
-                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                      </span>
-                    </GlareHover>
+                    Sign In to Continue
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-200" />
                   </motion.button>
                 </Link>
               </motion.div>
@@ -630,39 +736,40 @@ export default function LandingPage() {
                 { icon: CreditCard, title: "Payment and Invoice Management", desc: "Handle publication fees and invoice generation directly in the platform." },
                 { icon: Users, title: "Faculty Profile Management", desc: "Maintain up-to-date researcher profiles and publication histories." },
               ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="h-full"
-                >
-                  <GlareHover
-                    width="100%"
-                    height="100%"
-                    background={isDark ? 'rgba(255, 255, 255, 0.03)' : '#ffffff'}
-                    borderRadius="16px"
-                    borderColor={isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0'}
-                    glareColor={isDark ? '#34d399' : '#10b981'}
-                    glareOpacity={isDark ? 0.3 : 0.2}
-                    glareAngle={-45}
-                    glareSize={250}
-                    transitionDuration={1500}
-                    className={`h-full transition-shadow hover:shadow-xl backdrop-blur-sm ${isDark
+                <TiltCard key={i}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                    className="h-full"
+                  >
+                    <GlareHover
+                      width="100%"
+                      height="100%"
+                      background={isDark ? 'rgba(255, 255, 255, 0.03)' : '#ffffff'}
+                      borderRadius="16px"
+                      borderColor={isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0'}
+                      glareColor={isDark ? '#34d399' : '#10b981'}
+                      glareOpacity={isDark ? 0.3 : 0.2}
+                      glareAngle={-45}
+                      glareSize={250}
+                      transitionDuration={1500}
+                      className={`h-full transition-shadow hover:shadow-xl backdrop-blur-sm ${isDark
                         ? 'hover:bg-white/5 hover:border-emerald-500/30'
                         : 'hover:border-emerald-200'
-                      }`}
-                  >
-                    <div className="p-8 flex flex-col h-full w-full relative z-10 items-start text-left">
-                      <div className={`w-12 h-12 rounded-xl mb-6 flex items-center justify-center ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-600'}`}>
-                        <feature.icon size={24} />
+                        }`}
+                    >
+                      <div className="p-8 flex flex-col h-full w-full relative z-10 items-start text-left">
+                        <div className={`w-12 h-12 rounded-xl mb-6 flex items-center justify-center ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-600'}`}>
+                          <feature.icon size={24} />
+                        </div>
+                        <h3 className={`text-xl font-bold mb-3 ${isDark ? 'text-white' : 'text-slate-900'}`}>{feature.title}</h3>
+                        <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
                       </div>
-                      <h3 className={`text-xl font-bold mb-3 ${isDark ? 'text-white' : 'text-slate-900'}`}>{feature.title}</h3>
-                      <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
-                    </div>
-                  </GlareHover>
-                </motion.div>
+                    </GlareHover>
+                  </motion.div>
+                </TiltCard>
               ))}
             </div>
           </section>
@@ -699,8 +806,8 @@ export default function LandingPage() {
                       className="flex flex-col items-center text-center max-w-35"
                     >
                       <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-lg z-10 relative ${isDark
-                          ? 'bg-graphite border border-white/10 text-emerald-450'
-                          : 'bg-white border border-slate-200 text-emerald-600'
+                        ? 'bg-graphite border border-white/10 text-emerald-450'
+                        : 'bg-white border border-slate-200 text-emerald-600'
                         }`}>
                         <step.icon size={24} />
                       </div>
@@ -734,16 +841,16 @@ export default function LandingPage() {
           <div className={`h-px w-full bg-linear-to-r from-transparent via-emerald-500 to-transparent opacity-50`} />
 
           {/* Main footer content */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-10">
+          <div className="w-full px-4 sm:px-6 lg:px-12 pt-12 pb-8">
+            <div className="grid grid-cols-[auto_1fr] md:grid-cols-2 lg:grid-cols-4 gap-x-6 sm:gap-x-12 gap-y-10 lg:gap-8">
 
               {/* Brand Column */}
-              <div className="flex flex-col gap-4 max-w-xs">
+              <div className="flex flex-col gap-4 col-span-2 max-w-sm">
                 <div className="flex items-center gap-3">
-                  <img src={rpmsLogo} alt="RPMS Logo" className="h-9 w-auto object-contain" />
-                  <div className="flex flex-col">
-                    <span className={`font-bold text-sm leading-tight ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                      SNS Groups
+                  <TiltLogo src={rpmsLogo} alt="RPMS Logo" className="h-9 w-auto object-contain" />
+                  <div className="flex flex-col justify-center">
+                    <span className={`font-bold text-2xl tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                      SNS Publications
                     </span>
                     <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                       Research Publication Management System
@@ -753,16 +860,61 @@ export default function LandingPage() {
                 <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                   Empowering SNS faculty to manage, track, and showcase research publications with ease.
                 </p>
-                <div className={`flex items-center gap-2 text-sm ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-                  <Mail size={13} className="text-emerald-500" />
-                  <span>support@snsgroups.com</span>
+                <div className={`flex items-center gap-2.5 text-sm ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                  <Mail size={16} className="text-emerald-500 shrink-0" />
+                  <a href={`mailto:${config.supportEmail}`} className="hover:text-emerald-500 transition-colors translate-y-px">
+                    {config.supportEmail}
+                  </a>
                 </div>
+              </div>
+
+              {/* Quick Links Column */}
+              <div className="flex flex-col gap-4">
+                  <h4 className={`text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Quick Links</h4>
+                  <ul className="flex flex-col gap-3">
+                  <li>
+                    <button
+                      onClick={scrollToTop}
+                      className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
+                    >
+                      <ArrowRight size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
+                      Home
+                    </button>
+                  </li>
+                  <li>
+                    <Link
+                      to="/login"
+                      className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
+                    >
+                      <ArrowRight size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
+                      Sign In
+                    </Link>
+                  </li>
+                  <li>
+                    <a
+                      href={`mailto:${config.supportEmail}`}
+                      className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
+                    >
+                      <ArrowRight size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
+                      Help &amp; Support
+                    </a>
+                  </li>
+                </ul>
               </div>
 
               {/* Legal Column */}
               <div className="flex flex-col gap-4">
                 <h4 className={`text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Legal</h4>
                 <ul className="flex flex-col gap-3">
+                  <li>
+                    <Link
+                      to="/privacy"
+                      className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
+                    >
+                      <Shield size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
+                      Privacy Policy
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       to="/terms"
@@ -774,11 +926,11 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <Link
-                      to="/privacy"
+                      to="/refund"
                       className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
                     >
-                      <Shield size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
-                      Privacy Policy
+                      <FileText size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
+                      Refund &amp; Cancellation Policy
                     </Link>
                   </li>
                 </ul>
@@ -786,18 +938,41 @@ export default function LandingPage() {
 
             </div>
 
-            {/* Bottom bar */}
-            <div className={`mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
-              <p className={`text-xs ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
-                &copy; {new Date().getFullYear()} SNS Groups. All rights reserved.
+            {/* Bottom bar — copyright left, back-to-top right on mobile, centered on desktop */}
+            <div className={`relative mt-10 pt-6 border-t flex items-center justify-between ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
+              <p className={`text-xs ${isDark ? 'text-slate-600' : 'text-slate-400'} max-w-[75%] sm:max-w-none`}>
+                &copy; {new Date().getFullYear()} SNS Publications. All rights reserved.
               </p>
-              <p className={`text-xs ${isDark ? 'text-slate-700' : 'text-slate-400'}`}>
-                Built with ❤️ for SNS Faculty
-              </p>
+
+              {/* Back to Top button */}
+              <div className="absolute right-0 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto">
+                <motion.button
+                  onClick={scrollToTop}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={showBackToTop ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  aria-label="Back to top"
+                  style={{
+                    pointerEvents: showBackToTop ? 'auto' : 'none',
+                    boxShadow: showBackToTop
+                      ? isDark
+                        ? '0 0 16px 5px rgba(16,185,129,0.4), 0 4px 12px rgba(4,120,87,0.45)'
+                        : '0 0 16px 5px rgba(16,185,129,0.3), 0 4px 12px rgba(5,150,105,0.35)'
+                      : 'none',
+                  }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-colors ${isDark
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                      : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                    }`}
+                >
+                  <ArrowUp size={18} strokeWidth={2.5} />
+                </motion.button>
+              </div>
             </div>
           </div>
         </footer>
       </div>
+
     </>
   );
 }

@@ -13,6 +13,7 @@ import NotFound from '../pages/Auth/NotFound';
 import Maintenance from '../pages/Auth/Maintenance';
 import TermsAndConditions from '../pages/Auth/TermsAndConditions';
 import PrivacyPolicy from '../pages/Auth/PrivacyPolicy';
+import RefundPolicy from '../pages/Auth/RefundPolicy';
 import config from '../config';
 
 // Set to true to put the application in Maintenance Mode; false for normal operation.
@@ -138,6 +139,7 @@ export default function AppRoutes() {
       {/* Public Legal Routes */}
       <Route path="/terms" element={<TermsAndConditions />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/refund" element={<RefundPolicy />} />
 
       {/* Standalone 404 NotFound Route */}
       <Route path="*" element={<NotFound />} />

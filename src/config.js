@@ -34,6 +34,11 @@ const config = {
    *   2. Implementing real HTTP calls in src/api/*.js
    */
   isMockEnabled: import.meta.env.VITE_ENABLE_MOCK !== 'false',
+
+  /** Support Contact Information */
+  supportEmail: 'support@okrion.ai',
+  supportPhone: '+91 9840819991',
+  supportAddress: 'SNS Institutions, Coimbatore, Tamil Nadu, India',
 };
 
 export default config;

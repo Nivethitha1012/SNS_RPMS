@@ -486,8 +486,8 @@ export default function LandingPage() {
       <div className={`min-h-screen overflow-x-hidden ${isDark ? 'bg-[#0a0a0a] text-slate-200' : 'bg-slate-50 text-slate-800'}`}>
 
         {/* Background Effects */}
-        <div className="absolute top-0 left-0 w-full h-[100vh] pointer-events-none z-0 overflow-hidden">
-          <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-emerald-900/10 via-[#0a0a0a] to-blue-900/10' : 'from-emerald-100/40 via-slate-50 to-blue-100/40'}`} />
+        <div className="absolute top-0 left-0 w-full h-screen pointer-events-none z-0 overflow-hidden">
+          <div className={`absolute inset-0 bg-linear-to-br ${isDark ? 'from-emerald-900/10 via-[#0a0a0a] to-blue-900/10' : 'from-emerald-100/40 via-slate-50 to-blue-100/40'}`} />
           <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0iIzAwMCIvPgo8L3N2Zz4=')] bg-repeat" />
           <motion.div
             animate={{ y: [0, -20, 0], opacity: [0.5, 0.8, 0.5] }}
@@ -497,7 +497,7 @@ export default function LandingPage() {
           <motion.div
             animate={{ y: [0, 30, 0], opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className={`absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[150px] ${isDark ? 'bg-blue-900/10' : 'bg-blue-300/20'}`}
+            className={`absolute bottom-0 left-1/4 w-125 h-125 rounded-full blur-[150px] ${isDark ? 'bg-blue-900/10' : 'bg-blue-300/20'}`}
           />
         </div>
 
@@ -559,7 +559,7 @@ export default function LandingPage() {
                   delay={50}
                   animateBy="words"
                   direction="bottom"
-                  className="justify-center text-center mt-2 sm:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-blue-500 pb-2"
+                  className="justify-center text-center mt-2 sm:mt-4 text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-500 pb-2"
                 />
               </motion.div>
 
@@ -649,7 +649,7 @@ export default function LandingPage() {
                     glareSize={250}
                     transitionDuration={1500}
                     className={`h-full transition-shadow hover:shadow-xl backdrop-blur-sm ${isDark
-                        ? 'hover:bg-white/[0.05] hover:border-emerald-500/30'
+                        ? 'hover:bg-white/5 hover:border-emerald-500/30'
                         : 'hover:border-emerald-200'
                       }`}
                   >
@@ -667,7 +667,7 @@ export default function LandingPage() {
           </section>
 
           {/* Workflow */}
-          <section className={`py-24 ${isDark ? 'bg-white/[0.02]' : 'bg-slate-900/[0.02]'}`}>
+          <section className={`py-24 ${isDark ? 'bg-white/2' : 'bg-slate-900/2'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -695,10 +695,10 @@ export default function LandingPage() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.15 }}
-                      className="flex flex-col items-center text-center max-w-[140px]"
+                      className="flex flex-col items-center text-center max-w-35"
                     >
                       <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-lg z-10 relative ${isDark
-                          ? 'bg-[#121212] border border-white/10 text-emerald-400'
+                          ? 'bg-graphite border border-white/10 text-emerald-400'
                           : 'bg-white border border-slate-200 text-emerald-600'
                         }`}>
                         <step.icon size={24} />
