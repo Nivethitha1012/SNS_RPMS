@@ -32,6 +32,10 @@ pipeline {
                 dir('frontend') {
                     sh '''
                     CI=false npm run build
+                    echo "----- Listing frontend directory after build -----"
+                    ls -la
+                    echo "----- Searching for dist/build folders -----"
+                    find . -maxdepth 2 -type d \\( -iname "dist" -o -iname "build" \\)
                     '''
                 }
             }
@@ -40,7 +44,18 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh '''
-                    aws s3 sync dist s3://$S3_BUCKET/ \
+                    OUTPUT_DIR=""
+                    if [ -d "dist" ]; then
+                        OUTPUT_DIR="dist"
+                    elif [ -d "build" ]; then
+                        OUTPUT_DIR="build"
+                    else
+                        echo "ERROR: Neither dist/ nor build/ folder found after build!"
+                        ls -la
+                        exit 1
+                    fi
+                    echo "Using output directory: $OUTPUT_DIR"
+                    aws s3 sync "$OUTPUT_DIR" s3://$S3_BUCKET/ \
                     --region $AWS_REGION \
                     --delete
                     '''
