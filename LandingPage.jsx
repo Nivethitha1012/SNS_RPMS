@@ -739,7 +739,7 @@ export default function LandingPage() {
             </div>
 
             <div className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-              &copy; {new Date().getFullYear()} RPMS. All rights reserved.
+              &copy; {new Date().getFullYear()} SNS Groups. All rights reserved.
             </div>
           </div>
         </footer>

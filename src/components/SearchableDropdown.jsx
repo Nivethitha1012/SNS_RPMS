@@ -45,16 +45,7 @@ export function SearchableDropdown({ options, value, onChange, placeholder = "Se
       
       return (
         <div className="flex items-center gap-2 pr-2 w-full overflow-hidden">
-          <span className="flex items-center gap-1 min-w-0">
-            <span className="truncate">{value[0]}</span>
-            <X 
-              className="w-3.5 h-3.5 hover:text-red-500 cursor-pointer text-slate-400 transition-colors shrink-0" 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveItem(value[0]);
-              }} 
-            />
-          </span>
+          <span className="truncate">{value[0]}</span>
           {value.length > 1 && (
             <span 
               className="flex items-center justify-center bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md border border-emerald-200 shrink-0"

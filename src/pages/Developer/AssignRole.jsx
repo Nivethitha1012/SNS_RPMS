@@ -227,6 +227,7 @@ export const AssignRolePage = () => {
                 <div key={user.user_id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-left transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-slate-300">
                   <p className="font-bold text-slate-800 text-xs">{user.name}</p>
                   <div className="text-[11px] text-slate-655 space-y-2">
+                    <p><strong className="font-semibold">Email:</strong> {user.email || '—'}</p>
                     <p><strong className="font-semibold">Department:</strong> {user.department || '—'}</p>
                     <p><strong className="font-semibold">Institution:</strong> {user.institution || '—'}</p>
                     <div className="flex items-center gap-2">
@@ -257,8 +258,9 @@ export const AssignRolePage = () => {
                 <thead>
                   <tr className="bg-slate-50 text-slate-500 uppercase tracking-widest font-extrabold text-xs border-b border-slate-200">
                     <th className="p-4 w-1/4 text-left">User Name</th>
-                    <th className="p-4 w-1/3 text-left">Department</th>
-                    <th className="p-4 w-1/3 text-left">Institution</th>
+                    <th className="p-4 w-1/4 text-left">Email</th>
+                    <th className="p-4 w-1/4 text-left">Department</th>
+                    <th className="p-4 w-1/5 text-left">Institution</th>
                     <th className="p-4 w-1/12 text-left">Role</th>
                   </tr>
                 </thead>
@@ -267,6 +269,9 @@ export const AssignRolePage = () => {
                     <tr key={user.user_id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="p-4 font-bold text-slate-800">
                         <p className="font-bold text-slate-800 text-sm">{user.name}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-slate-700">{user.email || '—'}</p>
                       </td>
                       <td className="p-4">
                         <p className="text-slate-700">{user.department || '—'}</p>
@@ -295,7 +300,7 @@ export const AssignRolePage = () => {
                   ))}
                   {paginatedUsers.length === 0 && (
                     <tr>
-                      <td colSpan={3} className="p-10 text-center text-slate-400 italic text-xs">No users found.</td>
+                      <td colSpan={5} className="p-10 text-center text-slate-400 italic text-xs">No users found.</td>
                     </tr>
                   )}
                 </tbody>

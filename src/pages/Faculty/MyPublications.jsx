@@ -113,7 +113,7 @@ export const PublicationsPage = ({
           <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-left animate-fade-in transition-all duration-300 hover:scale-[1.01] hover:shadow-md hover:border-slate-300 relative z-20">
             <div className="flex flex-col sm:flex-row flex-wrap lg:flex-nowrap items-start sm:items-center gap-3 w-full">
               {/* Search matches title or id */}
-              <div className="relative flex flex-1 items-center h-11 sm:h-9 w-full min-w-[200px] max-w-md px-3 bg-white border border-slate-300 rounded-lg shadow-xs shrink-0 transition-all hover:border-slate-400 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500">
+              <div className="relative flex sm:flex-1 items-center h-11 sm:h-9 w-full sm:max-w-md px-3 bg-white border border-slate-300 rounded-lg shadow-xs shrink-0 transition-all hover:border-slate-400 focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500">
                 <Search className="h-4 w-4 text-slate-400 shrink-0" />
                 <input
                   type="text"

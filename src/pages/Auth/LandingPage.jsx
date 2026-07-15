@@ -733,13 +733,13 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <img src={rpmsLogo} alt="RPMS Logo" className="h-8 w-auto object-contain" />
               <div className="flex flex-col">
-                <span className={`font-bold text-lg ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>RPMS</span>
-                <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Research Publication Management System</span>
+                <span className={`font-bold text-lg ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>SNS Groups Research Publication Management System</span>
+                {/* <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Research Publication Management System</span> */}
               </div>
             </div>
 
             <div className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-              &copy; {new Date().getFullYear()} RPMS. All rights reserved.
+              &copy; {new Date().getFullYear()} SNS Groups . All rights reserved.
             </div>
           </div>
         </footer>

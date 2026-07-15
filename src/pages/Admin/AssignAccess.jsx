@@ -46,6 +46,7 @@ export const AssignAccessPage = ({
         id: r.user_id, name: r.name, department: r.department,
         institution: INSTITUTION_MAP[r.institution_name] || r.institution_name || '',
         isTemporaryAdmin: r.temp_admin,
+        isAdmin: r.admin,
         email: r.email,
         assignedBy: r.assigned_by,
       })));
@@ -187,10 +188,15 @@ export const AssignAccessPage = ({
                     <div key={user.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 text-left transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-slate-300">
                       <div>
                         <p 
-                          className="font-bold text-slate-800 text-xs cursor-pointer hover:underline"
+                          className="font-bold text-slate-800 text-xs cursor-pointer hover:underline inline-flex items-center gap-1.5"
                           onClick={() => handleFacultyClick(user.id)}
                         >
-                          {user.name}
+                          <span>{user.name}</span>
+                          {user.isAdmin && (
+                            <span className="text-[8px] px-1 py-0.2 bg-blue-50 text-blue-700 border border-blue-200 rounded font-semibold uppercase leading-none">
+                              Admin
+                            </span>
+                          )}
                         </p>
                         {user.isTemporaryAdmin && user.assignedBy && (
                           <span className="text-[10px] font-semibold text-indigo-650 block mt-1">
@@ -203,7 +209,11 @@ export const AssignAccessPage = ({
                         <p><strong className="font-semibold">Institution:</strong> {user.institution || '—'}</p>
                       </div>
                       <div className="pt-2">
-                        {user.isTemporaryAdmin ? (
+                        {user.isAdmin ? (
+                          <div className="w-full py-2 text-xs font-bold rounded-lg text-center bg-blue-50/50 text-blue-700 border border-blue-200/60">
+                            Administrator
+                          </div>
+                        ) : user.isTemporaryAdmin ? (
                           <div className="flex gap-2 w-full">
                             <button
                               onClick={() => handleEditAccess(user.id)}
@@ -257,10 +267,15 @@ export const AssignAccessPage = ({
                         <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
                           <td className="p-4 font-bold text-slate-800">
                              <p 
-                               className="font-bold text-slate-800 text-sm cursor-pointer hover:underline"
+                               className="font-bold text-slate-800 text-sm cursor-pointer hover:underline inline-flex items-center gap-1.5"
                                onClick={() => handleFacultyClick(user.id)}
                              >
-                               {user.name}
+                               <span>{user.name}</span>
+                               {user.isAdmin && (
+                                 <span className="text-[8px] px-1.5 py-0.2 bg-blue-50 text-blue-700 border border-blue-200 rounded font-semibold uppercase leading-none">
+                                   Admin
+                                 </span>
+                               )}
                              </p>
                              {user.isTemporaryAdmin && user.assignedBy && (
                                <span className="text-[10px] font-semibold text-indigo-650 block mt-1">
@@ -275,7 +290,11 @@ export const AssignAccessPage = ({
                             <p className="text-slate-700 font-medium">{user.institution || '—'}</p>
                           </td>
                           <td className="p-4 text-center">
-                            {user.isTemporaryAdmin ? (
+                            {user.isAdmin ? (
+                              <span className="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-lg bg-blue-50/50 text-blue-700 border border-blue-200/65">
+                                Administrator
+                              </span>
+                            ) : user.isTemporaryAdmin ? (
                               <div className="flex justify-center gap-2">
                                 <button
                                   onClick={() => handleEditAccess(user.id)}
