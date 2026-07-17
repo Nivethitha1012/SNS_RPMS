@@ -908,7 +908,7 @@ export default function LandingPage() {
                 <ul className="flex flex-col gap-3">
                   <li>
                     <Link
-                      to="/privacy"
+                      to="/privacy-policy"
                       className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
                     >
                       <Shield size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
@@ -917,7 +917,7 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <Link
-                      to="/terms"
+                      to="/termsandconditions"
                       className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
                     >
                       <FileText size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
@@ -926,7 +926,7 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <Link
-                      to="/refund"
+                      to="/refund&cancellation"
                       className={`flex items-center gap-2 text-sm transition-colors group ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}
                     >
                       <FileText size={13} className={`transition-colors ${isDark ? 'text-emerald-600 group-hover:text-emerald-400' : 'text-emerald-500 group-hover:text-emerald-600'}`} />
@@ -941,7 +941,7 @@ export default function LandingPage() {
             {/* Bottom bar — copyright left, back-to-top right on mobile, centered on desktop */}
             <div className={`relative mt-10 pt-6 border-t flex items-center justify-between ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
               <p className={`text-xs ${isDark ? 'text-slate-600' : 'text-slate-400'} max-w-[75%] sm:max-w-none`}>
-                &copy; {new Date().getFullYear()} SNS Publications. All rights reserved.
+                &copy; {new Date().getFullYear()} SNS Technology Business Incubator Foundation. All rights reserved.
               </p>
 
               {/* Back to Top button */}

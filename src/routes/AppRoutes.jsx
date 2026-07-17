@@ -36,7 +36,7 @@ import { AssignRolePage } from '../pages/Developer/AssignRole';
 
 const RootRoute = ({ landingPageEnabled, loading }) => {
   const { currentUser } = useAuth();
-  
+
   if (currentUser) {
     if (currentUser.role?.toLowerCase() === 'developer') return <Navigate to="/developer/assign-role" replace />;
     if (currentUser.role?.toLowerCase() === 'admin') return <Navigate to="/admin/dashboard" replace />;
@@ -137,9 +137,9 @@ export default function AppRoutes() {
       </Route>
 
       {/* Public Legal Routes */}
-      <Route path="/terms" element={<TermsAndConditions />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/refund" element={<RefundPolicy />} />
+      <Route path="/termsandconditions" element={<TermsAndConditions />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/refund&cancellation" element={<RefundPolicy />} />
 
       {/* Standalone 404 NotFound Route */}
       <Route path="*" element={<NotFound />} />

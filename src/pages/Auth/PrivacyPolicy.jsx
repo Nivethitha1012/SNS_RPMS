@@ -71,14 +71,14 @@ export default function PrivacyPolicy() {
     <div className={`min-h-screen transition-colors ${isDark ? 'bg-[#050505] text-slate-200' : 'bg-white text-slate-800'}`}>
       <header className={`sticky top-0 z-10 border-b backdrop-blur-md transition-all duration-300 ${isDark ? 'bg-[#050505]/95 border-white/5 shadow-lg shadow-black/20' : 'bg-white/95 border-slate-200 shadow-md shadow-slate-200/60'}`}>
         <div className="w-full px-4 sm:px-6 lg:px-12">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-3">
               <TiltLogo src={rpmsLogo} alt="Logo" className="h-10 w-auto object-contain" />
-              <span className={`font-bold text-lg hidden sm:block tracking-wide ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Publications
+              <span className={`font-bold text-xl tracking-tight ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>
+                SNS Publications
               </span>
             </Link>
-            <Link to="/" className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 shadow-sm ${isDark ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>
+            <Link to="/" className={`px-5 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 shadow-sm ${isDark ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>
               ← Back to Home
             </Link>
           </div>
@@ -175,17 +175,17 @@ export default function PrivacyPolicy() {
               <h4 className={`text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Legal</h4>
               <ul className="flex flex-col gap-3">
                 <li>
-                  <Link to="/privacy" className={`text-sm transition-colors ${isDark ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 font-semibold'}`}>
+                  <Link to="/privacy-policy" className={`text-sm transition-colors ${isDark ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 font-semibold'}`}>
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
+                  <Link to="/termsandconditions" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
                     Terms &amp; Conditions
                   </Link>
                 </li>
                 <li>
-                  <Link to="/refund" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
+                  <Link to="/refund&cancellation" className={`text-sm transition-colors ${isDark ? 'text-slate-400 hover:text-emerald-400' : 'text-slate-500 hover:text-emerald-600'}`}>
                     Refund &amp; Cancellation Policy
                   </Link>
                 </li>
@@ -195,7 +195,7 @@ export default function PrivacyPolicy() {
 
           <div className={`mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
             <p className={`text-xs ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
-              &copy; {new Date().getFullYear()} SNS Publications. All rights reserved.
+              &copy; {new Date().getFullYear()} SNS Technology Business Incubator Foundation. All rights reserved.
             </p>
           </div>
         </div>

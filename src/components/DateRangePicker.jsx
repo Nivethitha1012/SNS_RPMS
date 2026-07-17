@@ -214,18 +214,7 @@ export const DateRangePicker = ({ startDate, endDate, onChange }) => {
 
       {isOpen && (
         <div
-          className="fixed z-9999 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in flex flex-col min-w-max"
-          style={(() => {
-            if (!containerRef.current) return {};
-            const rect = containerRef.current.getBoundingClientRect();
-            const dropdownWidth = 250; // approx calendar width
-            // Align to button's left, but clamp so it doesn't overflow right edge
-            const left = Math.min(rect.left, window.innerWidth - dropdownWidth - 12);
-            return {
-              top: `${rect.bottom + 6}px`,
-              left: `${Math.max(8, left)}px`,
-            };
-          })()}
+          className="absolute right-0 top-[calc(100%+6px)] z-[9999] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in flex flex-col min-w-max"
         >
           <div className="flex flex-col md:flex-row justify-center items-center w-full divide-y md:divide-y-0 md:divide-x divide-slate-100">
             {renderCalendar(currentDate1, setCurrentDate1)}
