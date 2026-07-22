@@ -365,7 +365,7 @@ export const UploadPage = ({ currentUser, onSuccess, onCancelSubmission }) => {
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-left">
             <h4 className="text-xs sm:text-sm font-bold text-blue-900">Instruction for Razorpay Team</h4>
             <p className="text-xs text-blue-700 mt-1 leading-relaxed">
-              Please click the card showing <span className="font-bold">Draft Available</span>, then click <span className="font-bold">Save &amp; Proceed to Payment</span>.
+              Please click the card showing <span className="font-bold">Draft Available</span>, then click  <span className="font-bold">Continue Draft</span>, then click <span className="font-bold">Save &amp; Proceed to Payment</span>.
             </p>
           </div>
 
