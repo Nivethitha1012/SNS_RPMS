@@ -37,7 +37,7 @@ const config = {
 
   /** Support Contact Information */
   supportEmail: 'support@okrion.ai',
-  supportPhone: '+91 9840819991',
+  supportPhone: '+91 7200098866',
   supportAddress: 'SNS Institutions, Coimbatore, Tamil Nadu, India',
 };
 
