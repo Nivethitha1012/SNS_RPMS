@@ -40,7 +40,7 @@ const RootRoute = ({ landingPageEnabled, loading }) => {
   if (currentUser) {
     if (currentUser.role?.toLowerCase() === 'developer') return <Navigate to="/developer/assign-role" replace />;
     if (currentUser.role?.toLowerCase() === 'admin') return <Navigate to="/admin/dashboard" replace />;
-    return <Navigate to="/faculty/publications" replace />;
+    return <Navigate to="/faculty/upload" replace />;
   }
 
   if (loading) {

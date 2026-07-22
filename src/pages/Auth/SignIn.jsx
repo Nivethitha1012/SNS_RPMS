@@ -63,7 +63,7 @@ export default function SignIn() {
 
       } else {
 
-        navigate('/faculty/publications');
+        navigate('/faculty/upload');
 
       }
 

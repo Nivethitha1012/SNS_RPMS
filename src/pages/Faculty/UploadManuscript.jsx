@@ -362,6 +362,13 @@ export const UploadPage = ({ currentUser, onSuccess, onCancelSubmission }) => {
       
       {step === 1 && (
         <div className="space-y-6">
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-left">
+            <h4 className="text-xs sm:text-sm font-bold text-blue-900">Instruction for Razorpay Team</h4>
+            <p className="text-xs text-blue-700 mt-1 leading-relaxed">
+              Please click the card showing <span className="font-bold">Draft Available</span>, then click <span className="font-bold">Save &amp; Proceed to Payment</span>.
+            </p>
+          </div>
+
           {categoriesLoading ? (
             <div className="flex justify-center p-10"><div className="animate-spin h-8 w-8 border-4 border-charcoal border-t-transparent rounded-full"></div></div>
           ) : (
